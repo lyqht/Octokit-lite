@@ -14,3 +14,10 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-items: flex-start;
+  align-items: center;
+}

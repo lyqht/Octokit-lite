@@ -1,14 +1,15 @@
 {
-  "name": "typescript-nextjs-starter",
-  "description": "A TypeScript starter for Next.js that includes all you need to build amazing projects",
+  "name": "unfork",
+  "description": "A TypeScript Next.js that will help you to unfork projects",
   "version": "1.0.0",
   "private": true,
-  "author": "João Pedro Schmitz <hey@joaopedro.dev> (@jpedroschmitz)",
+  "author": "Estee Tey",
   "license": "MIT",
   "keywords": [
     "nextjs",
-    "starter",
-    "typescript"
+    "typescript",
+    "supabase",
+    "octokit"
   ],
   "scripts": {
     "dev": "next",
@@ -30,8 +31,10 @@
     "@supabase/supabase-js": "1.35.3",
     "@supabase/ui": "0.36.5",
     "next": "12.1.6",
+    "octokit": "1.7.2",
     "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react-dom": "18.1.0",
+    "react-query": "3.39.1"
   },
   "devDependencies": {
     "@commitlint/cli": "17.0.2",
