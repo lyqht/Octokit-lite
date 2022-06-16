@@ -14,7 +14,7 @@ export const BasicUserInfo = () => {
     return (
       <>
         <Typography.Text>Signed in: {user.email}</Typography.Text>
-        <Button block onClick={() => supabase.auth.signOut()}>
+        <Button type="default" block onClick={() => supabase.auth.signOut()}>
           Sign out
         </Button>
       </>

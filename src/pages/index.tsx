@@ -1,21 +1,22 @@
-import Head from 'next/head';
-import Image from 'next/image';
 import { BasicUserInfo, LoginButton } from '@/components/Auth';
+import RepositoryPicker from '@/components/RepositoryPicker';
 import styles from '@/styles/Home.module.css';
-import { Auth } from '@supabase/ui';
+import { Auth, Button } from '@supabase/ui';
+import Head from 'next/head';
 import { useEffect, useState } from 'react';
-import { GetRepositoriesResponse, Repository } from './api/github';
-import RepositoryItem from '@/components/RepositoryItem';
+import { GetRepositoriesResponse } from './api/github';
 
 export default function Home() {
   const { user, session } = Auth.useUser();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<GetRepositoriesResponse | null>(null);
+  const [selectedRepos, setSelectedRepos] = useState([]);
 
-  useEffect(() => {
-    setLoading(true);
+  const fetchAndUpdateData = () => {
     if (session && session.provider_token) {
-      fetch(`api/github?provider_token=${session.provider_token}`)
+      fetch(`api/github?provider_token=${session.provider_token}`, {
+        method: `GET`,
+      })
         .then((res) => res.json())
         .then((fetchedData) => {
           setData(fetchedData);
@@ -24,49 +25,97 @@ export default function Home() {
     } else {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    fetchAndUpdateData();
   }, [session]);
 
   return (
     <div className={styles.container}>
       <Head>
-        <title>TypeScript starter for Next.js</title>
+        <title>Unfork</title>
         <meta
           name="description"
-          content="TypeScript starter for Next.js that includes all you need to build amazing apps"
+          content="App to help remove all your unused forks"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main className={user ? styles[`main-loggedin`] : styles.main}>
         <h1 className={styles.title}>Unfork</h1>
         {user ? <BasicUserInfo /> : <LoginButton />}
       </main>
 
-      <body className={styles.main}>
+      <div className={styles.main}>
         {!loading && data && (
-          <div>
-            <p>
-              You have {data.repos.length} repositories, out of which{` `}
-              {data.forks.length} are forks.
-            </p>
-            {data.repos.map((repo) => (
-              <RepositoryItem key={repo.id} repository={repo as Repository} />
-            ))}
-          </div>
+          <>
+            <div>
+              <h3>You have a total of {data.repos.length} repositories.</h3>
+              <p>Choose the repositories that you want to delete.</p>
+              <div className={styles.select}>
+                <RepositoryPicker
+                  options={[
+                    {
+                      label: `Forked`,
+                      options: data.forks.map((repo) => ({
+                        value: { owner: repo.owner.login, repo: repo.name },
+                        label: repo.name,
+                      })),
+                    },
+                    {
+                      label: `Original`,
+                      options: data.notForks.map((repo) => ({
+                        value: { owner: repo.owner.login, repo: repo.name },
+                        label: repo.name,
+                      })),
+                    },
+                  ]}
+                  onChange={setSelectedRepos}
+                />
+              </div>
+            </div>
+            <Button
+              block
+              size="xlarge"
+              disabled={selectedRepos.length === 0}
+              onClick={() => {
+                if (session) {
+                  fetch(
+                    `api/github?provider_token=${
+                      session.provider_token
+                    }&selectedRepos=${JSON.stringify(
+                      selectedRepos.map((repo) => repo.value),
+                    )}`,
+                    {
+                      method: `DELETE`,
+                    },
+                  ).then((res) => {
+                    console.log(res);
+                    setLoading(true);
+                    fetchAndUpdateData();
+                  });
+                }
+              }}
+            >
+              Delete
+            </Button>
+          </>
         )}
-      </body>
+      </div>
 
       <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=typescript-nextjs-starter"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{` `}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
+        <span>
+          Project by{` `}
+          <a
+            href="https://github.com/lyqht"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Estee Tey
+          </a>
+        </span>
       </footer>
     </div>
   );

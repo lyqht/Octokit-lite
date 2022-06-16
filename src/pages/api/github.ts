@@ -27,15 +27,37 @@ export default async function handler(
     auth: provider_token,
   });
 
-  const fetched = await octokit.rest.repos.listForAuthenticatedUser();
+  if (req.method === `GET`) {
+    const fetched = await octokit.rest.repos.listForAuthenticatedUser();
 
-  const repos = fetched.data;
-  const notForks = repos.filter((repo) => !repo.fork);
-  const forks = repos.filter((repo) => repo.fork);
+    const repos = fetched.data;
+    const notForks = repos.filter((repo) => !repo.fork);
+    const forks = repos.filter((repo) => repo.fork);
 
-  return res.status(200).json({
-    repos,
-    forks,
-    notForks,
-  });
+    return res.status(200).json({
+      repos,
+      forks,
+      notForks,
+    });
+  }
+
+  if (req.method === `DELETE`) {
+    console.debug(`DELETING`);
+    const { selectedRepos } = req.query;
+    if (!selectedRepos) {
+      return res.status(400);
+    }
+
+    const repos = JSON.parse(selectedRepos as string);
+    console.debug({ repos });
+
+    for await (const { owner, repo } of repos) {
+      const response = await octokit.rest.repos.delete({ owner, repo });
+      if (response.status != 204) {
+        console.error({ response });
+        return res.status(400);
+      }
+    }
+    return res.status(204);
+  }
 }

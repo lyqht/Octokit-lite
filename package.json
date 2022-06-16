@@ -28,13 +28,15 @@
     ]
   },
   "dependencies": {
+    "@floating-ui/react-dom": "0.7.2",
     "@supabase/supabase-js": "1.35.3",
     "@supabase/ui": "0.36.5",
     "next": "12.1.6",
     "octokit": "1.7.2",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "react-query": "3.39.1"
+    "react-query": "3.39.1",
+    "react-select": "5.3.2"
   },
   "devDependencies": {
     "@commitlint/cli": "17.0.2",

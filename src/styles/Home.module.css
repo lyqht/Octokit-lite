@@ -1,5 +1,5 @@
 .container {
-  min-height: 100vh;
+  min-height: 90vh;
   padding: 0 0.5rem;
   display: flex;
   flex-direction: column;
@@ -12,8 +12,24 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-loggedin {
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  padding: 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.select {
+  width: 100%
 }
 
 .footer {
@@ -26,10 +42,7 @@
 }
 
 .footer a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
+  color: #abcbca;
 }
 
 .title a {
