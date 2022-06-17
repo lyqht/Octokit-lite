@@ -5,7 +5,7 @@ import { Octokit } from 'octokit';
 export type Repository =
   RestEndpointMethodTypes['repos']['get']['response']['data'];
 
-type Repositories =
+export type Repositories =
   RestEndpointMethodTypes['repos']['listForAuthenticatedUser']['response']['data'];
 
 export interface GetRepositoriesResponse {
@@ -27,37 +27,59 @@ export default async function handler(
     auth: provider_token,
   });
 
-  if (req.method === `GET`) {
-    const fetched = await octokit.rest.repos.listForAuthenticatedUser();
+  const fetchedRepos: Repositories = [];
 
-    const repos = fetched.data;
-    const notForks = repos.filter((repo) => !repo.fork);
-    const forks = repos.filter((repo) => repo.fork);
+  let currentPage = 1;
+  let continueFetching = true;
+
+  if (req.method === `GET`) {
+    while (continueFetching) {
+      const currentPageFetched =
+        await octokit.rest.repos.listForAuthenticatedUser({
+          per_page: 100,
+          page: currentPage,
+        });
+
+      const currentFetchedData: Repositories = currentPageFetched.data;
+
+      fetchedRepos.push(...currentFetchedData);
+
+      if (currentFetchedData.length === 100) {
+        currentPage += 1;
+      } else {
+        continueFetching = false;
+      }
+    }
+
+    const notForks = fetchedRepos.filter((repo) => !repo.fork);
+    const forks = fetchedRepos.filter((repo) => repo.fork);
 
     return res.status(200).json({
-      repos,
+      repos: fetchedRepos,
       forks,
       notForks,
     });
   }
 
   if (req.method === `DELETE`) {
-    console.debug(`DELETING`);
     const { selectedRepos } = req.query;
     if (!selectedRepos) {
       return res.status(400);
     }
 
     const repos = JSON.parse(selectedRepos as string);
-    console.debug({ repos });
 
     for await (const { owner, repo } of repos) {
-      const response = await octokit.rest.repos.delete({ owner, repo });
-      if (response.status != 204) {
-        console.error({ response });
-        return res.status(400);
+      try {
+        const response = await octokit.rest.repos.delete({ owner, repo });
+        if (response.status != 204) {
+          return res.status(400);
+        }
+      } catch (err) {
+        console.log(err);
       }
     }
+
     return res.status(204);
   }
 }
