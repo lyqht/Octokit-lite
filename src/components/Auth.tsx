@@ -13,7 +13,7 @@ export const BasicUserInfo = () => {
   if (user) {
     return (
       <>
-        <p className='text-slate-600 text-sm'>Signed in: {user.email}</p>
+        <p className="text-slate-600 text-sm">Signed in: {user.email}</p>
         <Button type="default" block onClick={() => supabase.auth.signOut()}>
           Sign out
         </Button>
