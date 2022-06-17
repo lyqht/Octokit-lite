@@ -1,6 +1,14 @@
 import { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
+import { createClient } from '@supabase/supabase-js';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Octokit } from 'octokit';
+import { definitions } from '../../types/supabase';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ``;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_SECRET || ``;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+export type DeletedRecord = definitions['DeletedRecords'];
 
 export type Repository =
   RestEndpointMethodTypes['repos']['get']['response']['data'];
@@ -14,9 +22,19 @@ export interface GetRepositoriesResponse {
   notForks: Repositories;
 }
 
+export interface DeleteRepositoriesResponse {
+  data: DeletedRecord[];
+}
+
+export interface ErrorResponse {
+  message: string;
+}
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<GetRepositoriesResponse>,
+  res: NextApiResponse<
+    GetRepositoriesResponse | ErrorResponse | DeleteRepositoriesResponse
+  >,
 ) {
   const { provider_token } = req.query;
   if (!provider_token) {
@@ -27,12 +45,11 @@ export default async function handler(
     auth: provider_token,
   });
 
-  const fetchedRepos: Repositories = [];
-
-  let currentPage = 1;
-  let continueFetching = true;
-
   if (req.method === `GET`) {
+    const fetchedRepos: Repositories = [];
+    let currentPage = 1;
+    let continueFetching = true;
+
     while (continueFetching) {
       const currentPageFetched =
         await octokit.rest.repos.listForAuthenticatedUser({
@@ -62,24 +79,48 @@ export default async function handler(
   }
 
   if (req.method === `DELETE`) {
-    const { selectedRepos } = req.query;
-    if (!selectedRepos) {
-      return res.status(400);
+    const { selectedRepos, userId } = req.query;
+    if (!selectedRepos || !userId) {
+      return res.status(400).json({ message: `query parameters missing` });
     }
 
     const repos = JSON.parse(selectedRepos as string);
+    const finalResponseData: DeletedRecord[] = [];
 
-    for await (const { owner, repo } of repos) {
+    for (const { owner, repo } of repos) {
       try {
+        const getRepoResponse = await octokit.rest.repos.get({ owner, repo });
+        const repoDetails: Repository = getRepoResponse.data;
         const response = await octokit.rest.repos.delete({ owner, repo });
+
         if (response.status != 204) {
-          return res.status(400);
+          return res.status(400).json({ message: `Error deleting ${repo}` });
+        }
+
+        const { data, error } = await supabase
+          .from<DeletedRecord>(`DeletedRecords`)
+          .insert([
+            {
+              repo,
+              repoDetails,
+              sourceRepo: repoDetails.source?.full_name,
+              isFork: repoDetails.fork,
+              userId: userId as string,
+            },
+          ]);
+
+        if (error) {
+          console.error(error);
+          return res.status(400).json({ message: `Error deleting ${repo}` });
+        } else {
+          finalResponseData.push(...data);
         }
       } catch (err) {
-        console.log(err);
+        console.error(err);
+        return res.status(400).json({ message: `Error deleting ${repo}` });
       }
     }
 
-    return res.status(204);
+    return res.status(200).json({ data: finalResponseData });
   }
 }

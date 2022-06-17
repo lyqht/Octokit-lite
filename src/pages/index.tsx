@@ -6,6 +6,10 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { GetRepositoriesResponse } from './api/github';
 import { Option } from '../components/RepositoryPicker';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const Popup = withReactContent(Swal);
 
 export default function Home() {
   const { user, session } = Auth.useUser();
@@ -28,10 +32,40 @@ export default function Home() {
     }
   };
 
+  const onDeleteButtonPress = async () => {
+    const userInput = await Popup.fire({
+      title: `Are you sure?`,
+      text: `You won't be able to revert this!`,
+      icon: `warning`,
+      showCancelButton: true,
+      confirmButtonColor: `#F04444`,
+      cancelButtonColor: `#D9D9D9`,
+      confirmButtonText: `Yes, confirm delete.`,
+    });
+
+    if (userInput.isConfirmed && session) {
+      const res = await fetch(
+        `api/github?provider_token=${
+          session.provider_token
+        }&selectedRepos=${JSON.stringify(
+          selectedRepos.map((repo) => repo.value),
+        )}&userId=${user?.id}`,
+        {
+          method: `DELETE`,
+        },
+      );
+      const resBody = await res.json();
+      const numReposDeleted = resBody.data.length;
+      Popup.fire(`Deleted!`, `${numReposDeleted} repositories has been deleted.`, `success`);
+      setLoading(true);
+      fetchAndUpdateData();
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     fetchAndUpdateData();
-  }, [session]);
+  }, [session, user]);
 
   return (
     <div className={styles.container}>
@@ -44,10 +78,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={user ? styles[`main-loggedin`] : styles.main}>
+      <div className={styles[`main-loggedin`]}>
         <h1 className={styles.title}>Unfork</h1>
         {user ? <BasicUserInfo /> : <LoginButton />}
-      </main>
+      </div>
 
       <div className={styles.main}>
         {!loading && data && (
@@ -81,29 +115,13 @@ export default function Home() {
               block
               size="xlarge"
               disabled={selectedRepos.length === 0}
-              onClick={() => {
-                if (session) {
-                  fetch(
-                    `api/github?provider_token=${
-                      session.provider_token
-                    }&selectedRepos=${JSON.stringify(
-                      selectedRepos.map((repo) => repo.value),
-                    )}`,
-                    {
-                      method: `DELETE`,
-                    },
-                  ).then((res) => {
-                    console.log(res);
-                    setLoading(true);
-                    fetchAndUpdateData();
-                  });
-                }
-              }}
+              onClick={onDeleteButtonPress}
             >
               Delete
             </Button>
           </>
         )}
+        {loading && <p>Fetching your repos...</p>}
       </div>
 
       <footer className={styles.footer}>
