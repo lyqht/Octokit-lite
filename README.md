@@ -2,6 +2,8 @@
 
 This website will help you to easily identify all the forks that you have made over the _months_ or _years_ and **unfork** them all!
 
+![](demo.gif)
+
 ## Problem
 
 GitHub forks tend to be created for the following reasons:
@@ -23,6 +25,8 @@ After months and years, usually these forks still stay in your repository — an
 This project is bootstrapped by:
 - [Typescript Next.js starter by @jpedroschmitz](https://github.com/jpedroschmitz/typescript-nextjs-starter)
 - [Supabase](https://github.com/supabase/supabase/)
+- [React Select](https://react-select.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
 
 For lessons learnt, you can refer to [notes.md](notes.md).
 
