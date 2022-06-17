@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { Auth, Button, Typography } from '@supabase/ui';
+import { Auth, Button } from '@supabase/ui';
 import { PropsWithChildren } from 'react';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ``;
@@ -13,7 +13,7 @@ export const BasicUserInfo = () => {
   if (user) {
     return (
       <>
-        <Typography.Text>Signed in: {user.email}</Typography.Text>
+        <p className='text-slate-600 text-sm'>Signed in: {user.email}</p>
         <Button type="default" block onClick={() => supabase.auth.signOut()}>
           Sign out
         </Button>

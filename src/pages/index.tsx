@@ -78,17 +78,17 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className={styles[`main-loggedin`]}>
-        <h1 className={styles.title}>Unfork</h1>
+      <div className={`text-center flex-col shrink justify-items-center content-center p-4`}>
+        <h1 className={'text-slate-700 text-5xl'}>Unfork</h1>
         {user ? <BasicUserInfo /> : <LoginButton />}
       </div>
 
-      <div className={styles.main}>
+      <div className={styles.body}>
         {!loading && data && (
           <>
             <div>
-              <h3>You have a total of {data.repos.length} repositories.</h3>
-              <p>Choose the repositories that you want to delete.</p>
+              <p className='py-4'>You have a total of <span className='underline underline-offset-4 text-white bg-slate-500 px-2 rounded-t-lg'>{data.repos.length}</span> repositories.</p>
+              <p className='py-4'>Choose the repositories that you want to delete.</p>
               <div className={styles.select}>
                 <RepositoryPicker
                   options={[
@@ -124,13 +124,17 @@ export default function Home() {
         {loading && <p>Fetching your repos...</p>}
       </div>
 
-      <footer className={styles.footer}>
+      <div className="w-1/2 border-t border-gray-300 p-2"></div>
+
+
+      <footer className={'text-slate-800'}>
         <span>
           Project by{` `}
           <a
             href="https://github.com/lyqht"
             target="_blank"
             rel="noopener noreferrer"
+            className={'text-slate-500'}
           >
             Estee Tey
           </a>
