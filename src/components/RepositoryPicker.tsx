@@ -51,7 +51,7 @@ export const createGroupedOptions = (data: Repositories) => [
   {
     label: `Forked`,
     options: data
-      .filter((repo) => !repo.fork)
+      .filter((repo) => repo.fork)
       .map((repo) => ({
         value: { owner: repo.owner.login, repo: repo.name },
         label: repo.name,
@@ -60,7 +60,7 @@ export const createGroupedOptions = (data: Repositories) => [
   {
     label: `Original`,
     options: data
-      .filter((repo) => repo.fork)
+      .filter((repo) => !repo.fork)
       .map((repo) => ({
         value: { owner: repo.owner.login, repo: repo.name },
         label: repo.name,
