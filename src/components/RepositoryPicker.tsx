@@ -1,5 +1,6 @@
 import { CSSProperties, ReactNode } from 'react';
 import Select, { ActionMeta, GroupBase, MultiValue } from 'react-select';
+import { Repositories } from '../pages/api/github';
 
 const groupStyles = {
   display: `flex`,
@@ -46,8 +47,30 @@ const formatGroupLabel = (data: GroupBase<Option>): ReactNode => (
   </div>
 );
 
+export const createGroupedOptions = (data: Repositories) => [
+  {
+    label: `Forked`,
+    options: data
+      .filter((repo) => !repo.fork)
+      .map((repo) => ({
+        value: { owner: repo.owner.login, repo: repo.name },
+        label: repo.name,
+      })),
+  },
+  {
+    label: `Original`,
+    options: data
+      .filter((repo) => repo.fork)
+      .map((repo) => ({
+        value: { owner: repo.owner.login, repo: repo.name },
+        label: repo.name,
+      })),
+  },
+];
+
 const RepositoryPicker: React.FC<Props> = ({ options, onChange }) => (
   <Select<Option, true>
+    className="w-full"
     isClearable
     isMulti
     defaultMenuIsOpen

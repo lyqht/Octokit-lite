@@ -18,8 +18,6 @@ export type Repositories =
 
 export interface GetRepositoriesResponse {
   repos: Repositories;
-  forks: Repositories;
-  notForks: Repositories;
 }
 
 export interface DeleteRepositoriesResponse {
@@ -68,13 +66,8 @@ export default async function handler(
       }
     }
 
-    const notForks = fetchedRepos.filter((repo) => !repo.fork);
-    const forks = fetchedRepos.filter((repo) => repo.fork);
-
     return res.status(200).json({
       repos: fetchedRepos,
-      forks,
-      notForks,
     });
   }
 
