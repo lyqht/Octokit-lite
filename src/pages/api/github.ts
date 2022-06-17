@@ -1,12 +1,8 @@
 import { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
-import { createClient } from '@supabase/supabase-js';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Octokit } from 'octokit';
 import { definitions } from '../../types/supabase';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ``;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_SECRET || ``;
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from './supabase';
 
 export type DeletedRecord = definitions['DeletedRecords'];
 
@@ -36,7 +32,7 @@ export default async function handler(
 ) {
   const { provider_token } = req.query;
   if (!provider_token) {
-    return res.status(400);
+    return res.status(400).json({ message: `Provider Token invalid` });
   }
 
   const octokit = new Octokit({

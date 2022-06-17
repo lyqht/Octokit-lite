@@ -1,16 +1,15 @@
 import { BasicUserInfo, LoginButton } from '@/components/Auth';
+import LoadingIndicator from '@/components/LoadingIndicator';
 import RepositoryPicker, {
   createGroupedOptions,
 } from '@/components/RepositoryPicker';
-import styles from '@/styles/Home.module.css';
 import { Auth, Button } from '@supabase/ui';
 import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
-import { GetRepositoriesResponse } from './api/github';
-import { Option, GroupedOption } from '../components/RepositoryPicker';
+import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import { GroupedOption, Option } from '../components/RepositoryPicker';
+import { GetRepositoriesResponse, DeletedRecord } from './api/github';
 
 const Popup = withReactContent(Swal);
 
@@ -20,20 +19,39 @@ export default function Home() {
   const [data, setData] = useState<GetRepositoriesResponse | null>(null);
   const [shownOptions, setShownOptions] = useState<GroupedOption[]>([]);
   const [selectedRepos, setSelectedRepos] = useState<Option[]>([]);
+
+  const [deletedItems, setDeletedItems] = useState<DeletedRecord[]>([]);
   const [showDeletedItems, setShowDeletedItems] = useState(false);
 
-  const fetchAndUpdateData = () => {
-    if (session && session.provider_token) {
-      fetch(`api/github?provider_token=${session.provider_token}`, {
-        method: `GET`,
-      })
-        .then((res) => res.json())
-        .then((fetchedData) => {
-          setData(fetchedData);
-          setShownOptions(createGroupedOptions(fetchedData.repos));
-        })
-        .finally(() => setLoading(false));
-    } else {
+  const fetchAndUpdateData = async () => {
+    if (user && session && session.provider_token) {
+      try {
+        const githubResponse = await fetch(
+          `api/github?provider_token=${session.provider_token}`,
+        );
+        const fetchedData = await githubResponse.json();
+        setData(fetchedData);
+        setShownOptions(createGroupedOptions(fetchedData.repos));
+      } catch (err) {
+        Popup.fire({
+          icon: `error`,
+          title: `Error retrieving data from GitHub API`,
+          text: `${err}`,
+        });
+      }
+
+      try {
+        const dbResponse = await fetch(`api/supabase?userId=${user.id}`);
+        const fetchedData: DeletedRecord[] = await dbResponse.json();
+        setDeletedItems(fetchedData);
+      } catch (err) {
+        Popup.fire({
+          icon: `error`,
+          title: `Error retrieving data from DB`,
+          text: `${err}`,
+        });
+      }
+
       setLoading(false);
     }
   };
@@ -99,7 +117,7 @@ export default function Home() {
           {user ? <BasicUserInfo /> : <LoginButton />}
         </div>
 
-        {loading ? (
+        {loading && user ? (
           <LoadingIndicator />
         ) : (
           <div className="flex flex-col flex-grow w-full md:w-1/4 flex-auto px-4">
@@ -115,7 +133,12 @@ export default function Home() {
                     repositories.
                   </p>
                   <div className="pb-4">
-                    <button className="text-slate-500">
+                    <button
+                      className="text-slate-500"
+                      onClick={() => {
+                        setShowDeletedItems(true);
+                      }}
+                    >
                       View what you have deleted using Unfork
                     </button>
                   </div>
@@ -145,7 +168,23 @@ export default function Home() {
                 </Button>
               </div>
             )}
-            {showDeletedItems && <div></div>}
+            {showDeletedItems && (
+              <div>
+                <button
+                  onClick={() => {
+                    setShowDeletedItems(false);
+                  }}
+                >
+                  {`<`} Back
+                </button>
+                {deletedItems.map((item) => (
+                  <div className="flex flex-row" key={item.id}>
+                    <p className="p-1">{item.repo}</p>
+                    <p className="p-1">Deleted at {item.created_at}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

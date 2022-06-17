@@ -14,9 +14,9 @@ After months and years, usually these forks still stay in your repository — an
 ## Features
 
 - [x] View your repository count.
-- [x] You can choose what forks to delete before actually deleting them.
-- [ ] View what the forks that you have deleted.
-- [ ] Generates a optional shell command for you to run to backup all the forks that you are going to delete before deleting them.
+- [x] You can choose what repos to delete before actually deleting them.
+- [x] View what the forks that you have deleted.
+- [ ] Generates an optional shell command for you to run to backup all the forks that you are going to delete before deleting them.
 
 ## Tech Notes
 
