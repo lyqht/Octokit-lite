@@ -5,12 +5,13 @@ import { Auth, Button } from '@supabase/ui';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { GetRepositoriesResponse } from './api/github';
+import { Option } from '../components/RepositoryPicker';
 
 export default function Home() {
   const { user, session } = Auth.useUser();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<GetRepositoriesResponse | null>(null);
-  const [selectedRepos, setSelectedRepos] = useState([]);
+  const [selectedRepos, setSelectedRepos] = useState<Option[]>([]);
 
   const fetchAndUpdateData = () => {
     if (session && session.provider_token) {

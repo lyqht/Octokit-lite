@@ -1,5 +1,5 @@
-import { CSSProperties } from 'react';
-import Select from 'react-select';
+import { CSSProperties, ReactNode } from 'react';
+import Select, { ActionMeta, GroupBase, MultiValue } from 'react-select';
 
 const groupStyles = {
   display: `flex`,
@@ -19,28 +19,35 @@ const groupBadgeStyles: CSSProperties = {
   textAlign: `center`,
 };
 
+type OptionValue = {
+  owner: string;
+  repo: string;
+};
+
 export interface Option {
-  readonly value: string;
+  readonly value: OptionValue;
   readonly label: string;
 }
-
-export type ForkedRepoOption = Option;
-
-export type OriginalRepoOption = Option;
 
 export interface GroupedOption {
   readonly label: string;
-  readonly options: readonly ForkedRepoOption[] | readonly OriginalRepoOption[];
+  readonly options: Option[];
 }
 
-const formatGroupLabel = (data: GroupedOption) => (
+interface Props {
+  options: GroupedOption[];
+  onChange: (value: MultiValue<Option>, actionMeta: ActionMeta<Option>) => void;
+}
+
+const formatGroupLabel = (data: GroupBase<Option>): ReactNode => (
   <div style={groupStyles}>
     <span>{data.label}</span>
     <span style={groupBadgeStyles}>{data.options.length}</span>
   </div>
 );
-const RepositoryPicker = ({ options, onChange }) => (
-  <Select
+
+const RepositoryPicker: React.FC<Props> = ({ options, onChange }) => (
+  <Select<Option, true>
     isClearable
     isMulti
     defaultMenuIsOpen
