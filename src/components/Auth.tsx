@@ -24,11 +24,16 @@ export const BasicUserInfo = () => {
 };
 
 export const LoginButton = () => (
-  <Auth
-    onlyThirdPartyProviders={true}
-    supabaseClient={supabase}
-    providers={[`github`]}
-  />
+  <Button
+    onClick={() =>
+      supabase.auth.signIn(
+        { provider: `github` },
+        { scopes: `delete_repo, repo` },
+      )
+    }
+  >
+    Sign in with GitHub
+  </Button>
 );
 
 const AuthContext = (props: PropsWithChildren) => {
