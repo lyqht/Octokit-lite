@@ -33,9 +33,10 @@ export default function Home() {
   };
 
   const onDeleteButtonPress = async () => {
+    const description = selectedRepos.map(repo => `- ${repo.label}<br />`).join('');
     const userInput = await Popup.fire({
       title: `Are you sure?`,
-      text: `You won't be able to revert this!`,
+      html: `You are about to delete the following repositories:<br />${description}`,
       icon: `warning`,
       showCancelButton: true,
       confirmButtonColor: `#F04444`,
