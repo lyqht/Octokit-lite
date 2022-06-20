@@ -10,6 +10,7 @@
 - [x] View your repository count.
 - [x] You can choose what repos to delete before actually deleting them.
 - [x] View what the forks that you have deleted.
+- [ ] Allow users to filter forks by inactivity level (e.g. last repo commit date/their last personal commit date to the repo)
 - [ ] Generates an optional shell command for you to run to backup all the forks that you are going to delete before deleting them.
 
 ![](demo.gif)
