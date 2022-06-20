@@ -1,6 +1,11 @@
-# Unfork
+<div align='center'>
+<img src='public/logo.png' />
+<h3>Unfork</h3>
+<p>This website will help you to easily identify all the forks that you have made over the <i>months</i> or <i>years</i> and <b>unfork</b> them all!</p>
+</div>
 
-This website will help you to easily identify all the forks that you have made over the _months_ or _years_ and **unfork** them all!
+
+## Demo
 
 ![](demo.gif)
 
