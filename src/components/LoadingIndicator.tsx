@@ -1,5 +1,12 @@
-const LoadingIndicator: React.FC = () => (
-  <div className={`rounded flex content-center justify-center p-4`}>
+interface Props {
+  text1: string;
+  text2?: string;
+}
+
+const LoadingIndicator: React.FC<Props> = ({ text1, text2 }) => (
+  <div
+    className={`rounded flex flex-col items-center justify-center p-4 text-center`}
+  >
     <svg
       role="status"
       className="inline w-10 h-10 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-slate-400"
@@ -16,7 +23,9 @@ const LoadingIndicator: React.FC = () => (
         fill="currentFill"
       />
     </svg>
-    <p>Fetching your repos...</p>
+
+    <p className={`text-slate-800 text-lg`}>{text1}</p>
+    {text2 && <p className={`text-slate-600 text-sm`}>{text2}</p>}
   </div>
 );
 

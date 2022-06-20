@@ -16,6 +16,8 @@ const Popup = withReactContent(Swal);
 export default function Home() {
   const { user, session } = Auth.useUser();
   const [loading, setLoading] = useState(true);
+  const [loadingText, setLoadingText] = useState(``);
+  const [loadingText2, setLoadingText2] = useState(``);
   const [data, setData] = useState<GetRepositoriesResponse | null>(null);
   const [shownOptions, setShownOptions] = useState<GroupedOption[]>([]);
   const [selectedRepos, setSelectedRepos] = useState<Option[]>([]);
@@ -25,6 +27,11 @@ export default function Home() {
 
   const fetchAndUpdateData = async () => {
     if (user && session && session.provider_token) {
+      setLoading(true);
+      setLoadingText(`Fetching your repos...`);
+      setLoadingText2(
+        `This may take a while depending on the number of repositories that you have.`,
+      );
       try {
         const githubResponse = await fetch(
           `api/github?provider_token=${session.provider_token}`,
@@ -57,6 +64,8 @@ export default function Home() {
   };
 
   const onDeleteButtonPress = async () => {
+    setLoading(true);
+    setLoadingText(`Deleting repositories...`);
     const reposToBeDeletedTextInBulletPoints = selectedRepos
       .map((repo) => `- ${repo.label}<br />`)
       .join(``);
@@ -88,15 +97,14 @@ export default function Home() {
         `${numReposDeleted} repositories has been deleted.`,
         `success`,
       );
-      setLoading(true);
+
       fetchAndUpdateData();
     }
   };
 
   useEffect(() => {
-    setLoading(true);
     fetchAndUpdateData();
-  }, [session, user]);
+  }, [session]);
 
   return (
     <div className="h-screen flex flex-col">
@@ -118,7 +126,9 @@ export default function Home() {
         </div>
 
         {loading && user ? (
-          <LoadingIndicator />
+          <div className="flex flex-col flex-grow w-full md:w-1/4 flex-auto px-4">
+            <LoadingIndicator text1={loadingText} text2={loadingText2} />
+          </div>
         ) : (
           <div className="flex flex-col flex-grow w-full md:w-1/4 flex-auto px-4">
             {!showDeletedItems && data && (
@@ -160,7 +170,7 @@ export default function Home() {
                 <Button
                   block
                   size="xlarge"
-                  disabled={selectedRepos.length === 0}
+                  disabled={selectedRepos.length === 0 || loading}
                   className="my-8"
                   onClick={onDeleteButtonPress}
                 >
