@@ -1,28 +1,13 @@
-import { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
+import {
+  HistoryRecord,
+  DeleteRepositoriesResponse,
+  GetRepositoriesResponse,
+  Repositories,
+  Repository,
+} from '@/types/github';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Octokit } from 'octokit';
-import { definitions } from '../../types/supabase';
-import { supabase } from './supabase';
-
-export type DeletedRecord = definitions['DeletedRecords'];
-
-export type Repository =
-  RestEndpointMethodTypes['repos']['get']['response']['data'];
-
-export type Repositories =
-  RestEndpointMethodTypes['repos']['listForAuthenticatedUser']['response']['data'];
-
-export interface GetRepositoriesResponse {
-  repos: Repositories;
-}
-
-export interface DeleteRepositoriesResponse {
-  data: DeletedRecord[];
-}
-
-export interface ErrorResponse {
-  message: string;
-}
+import { ErrorResponse, supabase } from './supabase';
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,6 +16,7 @@ export default async function handler(
   >,
 ) {
   const { provider_token } = req.query;
+
   if (!provider_token) {
     return res.status(400).json({ message: `Provider Token invalid` });
   }
@@ -74,7 +60,7 @@ export default async function handler(
     }
 
     const repos = JSON.parse(selectedRepos as string);
-    const finalResponseData: DeletedRecord[] = [];
+    const finalResponseData: HistoryRecord[] = [];
 
     for (const { owner, repo } of repos) {
       try {
@@ -87,7 +73,7 @@ export default async function handler(
         }
 
         const { data, error } = await supabase
-          .from<DeletedRecord>(`DeletedRecords`)
+          .from<HistoryRecord>(`DeletedRecords`)
           .insert([
             {
               repo,
