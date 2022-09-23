@@ -28,7 +28,7 @@ export const LoginButton = () => (
     onClick={() =>
       supabase.auth.signIn(
         { provider: `github` },
-        { scopes: `delete_repo, repo` },
+        { redirectTo: window.location.origin, scopes: `delete_repo, repo` },
       )
     }
   >
