@@ -5,11 +5,11 @@ interface Props {
 
 const LoadingIndicator: React.FC<Props> = ({ text1, text2 }) => (
   <div
-    className={`rounded flex flex-col items-center justify-center p-4 text-center`}
+    className={`flex flex-col items-center justify-center rounded p-4 text-center`}
   >
     <svg
       role="status"
-      className="inline w-10 h-10 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-slate-400"
+      className="mr-2 inline h-10 w-10 animate-spin fill-slate-400 text-gray-200 dark:text-gray-600"
       viewBox="0 0 100 101"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -24,8 +24,8 @@ const LoadingIndicator: React.FC<Props> = ({ text1, text2 }) => (
       />
     </svg>
 
-    <p className={`text-slate-800 text-lg`}>{text1}</p>
-    {text2 && <p className={`text-slate-600 text-sm`}>{text2}</p>}
+    <p className={`text-lg`}>{text1}</p>
+    {text2 && <p className={`text-sm`}>{text2}</p>}
   </div>
 );
 

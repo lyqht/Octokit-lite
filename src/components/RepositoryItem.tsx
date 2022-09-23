@@ -1,4 +1,4 @@
-import { Repository } from '@/pages/api/github';
+import { Repository } from '@/types/github';
 import { SVGProps } from 'react';
 
 function MdiGithubBox(props: SVGProps<SVGSVGElement>) {
@@ -24,7 +24,7 @@ type Props = {
 };
 
 const RepositoryItem: React.FC<Props> = ({ repository }) => {
-  const { name, description, url } = repository;
+  const { name } = repository;
   return (
     <div className="row">
       <MdiGithubBox />

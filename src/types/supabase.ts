@@ -198,7 +198,3 @@ export interface parameters {
   /** Format: json */
   'rowFilter.DeletedRecords.repoDetails': string;
 }
-
-export interface operations {}
-
-export interface external {}
