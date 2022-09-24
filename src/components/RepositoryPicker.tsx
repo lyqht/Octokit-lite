@@ -1,24 +1,6 @@
-import { CSSProperties, ReactNode } from 'react';
+import { Repository } from '@/types/github';
+import { ReactElement } from 'react';
 import Select, { ActionMeta, GroupBase, MultiValue } from 'react-select';
-import { Repositories } from '../pages/api/github';
-
-const groupStyles = {
-  display: `flex`,
-  alignItems: `center`,
-  justifyContent: `space-between`,
-};
-const groupBadgeStyles: CSSProperties = {
-  backgroundColor: `#EBECF0`,
-  borderRadius: `2em`,
-  color: `#172B4D`,
-  display: `inline-block`,
-  fontSize: 12,
-  fontWeight: `normal`,
-  lineHeight: `1`,
-  minWidth: 1,
-  padding: `0.16666666666667em 0.5em`,
-  textAlign: `center`,
-};
 
 type OptionValue = {
   owner: string;
@@ -40,14 +22,22 @@ interface Props {
   onChange: (value: MultiValue<Option>, actionMeta: ActionMeta<Option>) => void;
 }
 
-const formatGroupLabel = (data: GroupBase<Option>): ReactNode => (
-  <div style={groupStyles}>
+const formatGroupLabel = (data: GroupBase<Option>): ReactElement => (
+  <div className="flex flex-row items-center justify-between text-gray-400">
     <span>{data.label}</span>
-    <span style={groupBadgeStyles}>{data.options.length}</span>
+    <span className="inline-block rounded-sm bg-gray-200 p-1 px-3 text-center font-normal leading-none">
+      {data.options.length}
+    </span>
   </div>
 );
 
-export const createGroupedOptions = (data: Repositories) => [
+const formatOptionLabel = (data: Option): ReactElement => (
+  <div className="prose-base text-zinc-600">
+    <span>{data.label}</span>
+  </div>
+);
+
+export const createGroupedOptions = (data: Repository[]) => [
   {
     label: `Forked`,
     options: data
@@ -70,14 +60,14 @@ export const createGroupedOptions = (data: Repositories) => [
 
 const RepositoryPicker: React.FC<Props> = ({ options, onChange }) => (
   <Select<Option, true>
-    className="w-full"
+    className="dropdown w-full"
     isClearable
     isMulti
-    defaultMenuIsOpen
     name="selected-repositories"
     options={options}
     onChange={onChange}
     formatGroupLabel={formatGroupLabel}
+    formatOptionLabel={formatOptionLabel}
   />
 );
 

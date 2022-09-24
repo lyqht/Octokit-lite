@@ -23,12 +23,11 @@ jobs:
 
       - name: Install dependencies (with cache)
         uses: bahmutov/npm-install@v1
+        with:
+          useLockFile: false
 
       - name: Check types
         run: yarn type-check
 
       - name: Check linting
         run: yarn lint
-
-      - name: Check commits messages
-        uses: wagoid/commitlint-github-action@v4

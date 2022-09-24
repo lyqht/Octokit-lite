@@ -1,47 +1,32 @@
-import { createClient } from '@supabase/supabase-js';
-import { Auth, Button } from '@supabase/ui';
-import { PropsWithChildren } from 'react';
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { User } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ``;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ``;
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-export const BasicUserInfo = () => {
-  const { user } = Auth.useUser();
-
-  if (user) {
-    return (
-      <>
-        <p className="text-slate-600 text-sm">Signed in: {user.email}</p>
-        <Button type="default" block onClick={() => supabase.auth.signOut()}>
-          Sign out
-        </Button>
-      </>
-    );
-  }
-  return <></>;
+export const BasicUserInfo = ({ user }: { user: User }) => {
+  return (
+    <div className="grid place-items-center">
+      <p className="prose-sm mb-4">
+        Signed in: {user.user_metadata.preferred_username || user.email}
+      </p>
+      <button
+        className="btn btn-secondary"
+        onClick={() => supabaseClient.auth.signOut()}
+      >
+        Sign out
+      </button>
+    </div>
+  );
 };
 
 export const LoginButton = () => (
-  <Button
+  <button
+    className="btn btn-primary"
     onClick={() =>
-      supabase.auth.signIn(
+      supabaseClient.auth.signIn(
         { provider: `github` },
-        { scopes: `delete_repo, repo` },
+        { redirectTo: window.location.origin, scopes: `delete_repo, repo` },
       )
     }
   >
     Sign in with GitHub
-  </Button>
+  </button>
 );
-
-const AuthContext = (props: PropsWithChildren) => {
-  return (
-    <Auth.UserContextProvider supabaseClient={supabase}>
-      {props.children}
-    </Auth.UserContextProvider>
-  );
-};
-
-export default AuthContext;
