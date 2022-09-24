@@ -1,4 +1,5 @@
 import BackButton from '@/components/BackButton';
+import Footer from '@/components/Footer';
 import RepositoryPicker, {
   createGroupedOptions,
 } from '@/components/RepositoryPicker';
@@ -66,67 +67,69 @@ export default function Unfork({ user, repos = [] }: Props) {
   };
 
   return (
-    <div className="h-screen p-16">
-      <BackButton />
-      <div className="flex h-full flex-col">
-        <div className="flex flex-grow flex-col items-center justify-center p-4">
-          <Head>
-            <title>Unfork</title>
-            <meta
-              name="description"
-              content="App to help remove all your unused forks"
-            />
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
+    <div className="flex h-screen flex-col justify-between">
+      <div className="p-16">
+        <BackButton />
+        <div className="flex h-full flex-col">
+          <div className="flex flex-grow flex-col items-center justify-center p-4">
+            <Head>
+              <title>Unfork</title>
+              <meta
+                name="description"
+                content="App to help remove all your unused forks"
+              />
+              <link rel="icon" href="/favicon.ico" />
+            </Head>
 
-          <div className="flex w-full flex-auto flex-grow flex-col px-4 lg:w-1/3">
-            <div className={`flex h-full flex-col justify-between py-4`}>
-              <div className="flex h-1/2 flex-col justify-center">
-                <p>
-                  You have a total of{` `}
-                  <span className="rounded-t-lg bg-slate-500 px-2 text-white underline underline-offset-4">
-                    {repos.length}
-                  </span>
-                  {` `}
-                  repositories.
-                </p>
-                <p className="py-4">
-                  Choose the repositories that you want to delete.
-                </p>
-                <RepositoryPicker
-                  options={shownOptions}
-                  onChange={(selected) => {
-                    setSelectedRepos(selected as Option[]);
-                    const selectedLabels = selected.map((x) => x.label);
-                    const updatedShownRepos = repos.filter(
-                      (x) => !selectedLabels.includes(x.name),
-                    );
-                    setShownOptions(createGroupedOptions(updatedShownRepos));
-                  }}
-                />
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <button
-                  className="btn btn-outline"
-                  disabled={selectedRepos.length === 0}
-                  onClick={onDeleteButtonPress}
-                >
-                  Delete
-                </button>
-                <button
-                  className="btn btn-ghost text-xs"
-                  onClick={() => {
-                    Router.push(`/unfork/history`);
-                  }}
-                >
-                  View what you have deleted using Unfork
-                </button>
+            <div className="flex w-full flex-auto flex-grow flex-col px-4 lg:w-1/3">
+              <div className={`flex h-full flex-col justify-between py-4`}>
+                <div className="flex h-1/2 flex-col justify-center">
+                  <p>
+                    You have a total of{` `}
+                    <span className="rounded-t-lg bg-slate-500 px-2 text-white underline underline-offset-4">
+                      {repos.length}
+                    </span>
+                    {` `}
+                    repositories.
+                  </p>
+                  <p className="py-4">
+                    Choose the repositories that you want to delete.
+                  </p>
+                  <RepositoryPicker
+                    options={shownOptions}
+                    onChange={(selected) => {
+                      setSelectedRepos(selected as Option[]);
+                      const selectedLabels = selected.map((x) => x.label);
+                      const updatedShownRepos = repos.filter(
+                        (x) => !selectedLabels.includes(x.name),
+                      );
+                      setShownOptions(createGroupedOptions(updatedShownRepos));
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col gap-4">
+                  <button
+                    className="btn btn-outline"
+                    disabled={selectedRepos.length === 0}
+                    onClick={onDeleteButtonPress}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="btn btn-ghost text-xs"
+                    onClick={() => {
+                      Router.push(`/unfork/history`);
+                    }}
+                  >
+                    View what you have deleted using Unfork
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

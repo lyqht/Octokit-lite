@@ -1,4 +1,5 @@
 import BackButton from '@/components/BackButton';
+import Footer from '@/components/Footer';
 import { FC } from 'react';
 import { HistoryRecord } from '../types/github';
 interface Props {
@@ -7,14 +8,17 @@ interface Props {
 
 const HistoryLogs: FC<Props> = ({ items }) => {
   return (
-    <div className="p-4">
-      <BackButton />
-      {items.map((item) => (
-        <div className="flex flex-row gap-4 p-4" key={item.id}>
-          <p className="p-1">{item.repo}</p>
-          <p className="p-1">Deleted at {item.created_at}</p>
-        </div>
-      ))}
+    <div>
+      <div className="p-4">
+        <BackButton />
+        {items.map((item) => (
+          <div className="flex flex-row gap-4 p-4" key={item.id}>
+            <p className="p-1">{item.repo}</p>
+            <p className="p-1">Deleted at {item.created_at}</p>
+          </div>
+        ))}
+      </div>
+      <Footer />
     </div>
   );
 };

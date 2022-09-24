@@ -23,9 +23,9 @@ interface Props {
 }
 
 const formatGroupLabel = (data: GroupBase<Option>): ReactElement => (
-  <div className="flex items-center justify-between">
+  <div className="flex flex-row items-center justify-between text-gray-400">
     <span>{data.label}</span>
-    <span className="inline-block bg-gray-200 text-center font-normal leading-none text-gray-800">
+    <span className="inline-block rounded-sm bg-gray-200 p-1 px-3 text-center font-normal leading-none">
       {data.options.length}
     </span>
   </div>
@@ -63,7 +63,6 @@ const RepositoryPicker: React.FC<Props> = ({ options, onChange }) => (
     className="dropdown w-full"
     isClearable
     isMulti
-    defaultMenuIsOpen
     name="selected-repositories"
     options={options}
     onChange={onChange}
