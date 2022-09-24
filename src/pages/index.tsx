@@ -29,7 +29,12 @@ export default function Home() {
         </div>
         <div className="flex flex-col items-center">
           <Link href={`/unfork`}>
-            <button className={`btn flex flex-row items-center justify-center gap-4 shadow ${loading ? 'loading': ''}`} onClick={() => setLoading(true)}>
+            <button
+              className={`btn flex flex-row items-center justify-center gap-4 shadow ${
+                loading ? `loading` : ``
+              }`}
+              onClick={() => setLoading(true)}
+            >
               <div className="w-12">
                 <Image layout="responsive" src={unforkLogo} alt={`Unfork`} />
               </div>
