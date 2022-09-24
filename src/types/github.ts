@@ -1,7 +1,14 @@
 import { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
 import { definitions } from './supabase';
 
-export type HistoryRecord = definitions['DeletedRecords'];
+export type HistoryRecord = {
+  id: string;
+  repo: string;
+  userId: string;
+  created_at: Date;
+};
+
+export type DeletedRecord = definitions['DeletedRecords'];
 
 export type Repository =
   RestEndpointMethodTypes['repos']['get']['response']['data'];
