@@ -3,10 +3,12 @@ import { useUser } from '@supabase/auth-helpers-react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import unforkLogo from '../../public/unfork_logo.png';
 
 export default function Home() {
   const { user } = useUser();
+  const [loading, setLoading] = useState(false);
 
   return (
     <div className="flex h-screen flex-col">
@@ -27,7 +29,7 @@ export default function Home() {
         </div>
         <div className="flex flex-col items-center">
           <Link href={`/unfork`}>
-            <button className="btn flex flex-row items-center justify-center gap-4 shadow">
+            <button className={`btn flex flex-row items-center justify-center gap-4 shadow ${loading ? 'loading': ''}`} onClick={() => setLoading(true)}>
               <div className="w-12">
                 <Image layout="responsive" src={unforkLogo} alt={`Unfork`} />
               </div>

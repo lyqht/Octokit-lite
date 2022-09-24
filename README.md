@@ -19,7 +19,7 @@
 
 At the moment, Octokit lite has the following functionalities:
 - [Unfork](#unfork)  <img width='24' src='public/unfork_logo.png' /> — identify all the forks that you have made over the _months_ or _years_ and **unfork** them all!
-- (coming soon!) TopicSpace — a handy tool for project maintainers to apply a topic to all the repositories that you want!
+- (coming soon!) [TopicSpace](#topicspace) — a handy tool for project maintainers to apply a topic to all the repositories that you want!
 
 
 ---
