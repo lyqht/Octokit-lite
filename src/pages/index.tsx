@@ -6,11 +6,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import unforkLogo from '../../public/unfork_logo.png';
+import topicspaceLogo from '../../public/topicspace_logo.svg';
 import octokitLogo from '../../public/logo.png';
 
 export default function Home() {
   const { user } = useUser();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<null | number>(null);
 
   return (
     <div className="flex h-screen flex-col">
@@ -36,18 +37,31 @@ export default function Home() {
           <h1 className={`mb-12 text-2xl`}>Octokit-lite</h1>
           {!user && <LoginButton />}
         </div>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center gap-8">
           <Link href={`/unfork`}>
             <button
               className={`btn flex flex-row items-center justify-center gap-4 shadow ${
-                loading ? `loading` : ``
+                loading === 0 ? `loading` : ``
               }`}
-              onClick={() => setLoading(true)}
+              onClick={() => setLoading(0)}
             >
               <div className="w-12">
                 <Image layout="responsive" src={unforkLogo} alt={`Unfork`} />
               </div>
               <p>Unfork</p>
+            </button>
+          </Link>
+          <Link href={`/topicspace`}>
+            <button
+              className={`btn flex flex-row items-center justify-center gap-4 shadow ${
+                loading === 1 ? `loading` : ``
+              }`}
+              onClick={() => setLoading(1)}
+            >
+              <div className="w-12">
+                <Image layout="responsive" src={topicspaceLogo} alt={`topicspace logo`} />
+              </div>
+              <p>TopicSpace</p>
             </button>
           </Link>
         </div>
