@@ -2,7 +2,7 @@ import BackButton from '@/components/BackButton';
 import Footer from '@/components/Footer';
 import RepositoryPicker, {
   createGroupedOptions,
-} from '@/components/RepositoryPicker';
+} from '@/features/unfork/RepositoryPicker';
 import { server } from '@/config';
 import { GetRepositoriesResponse, Repository } from '@/types/github';
 import {
@@ -121,7 +121,7 @@ export default function Unfork({ user, repos = [] }: Props) {
                       Router.push(`/unfork/history`);
                     }}
                   >
-                    View what you have deleted using Unfork
+                    View what you have deleted using Octokit-lite
                   </button>
                 </div>
               </div>
