@@ -32,6 +32,7 @@ At the moment, Octokit lite has the following functionalities:
   - [Features](#features-1)
 - [Tech Stack](#tech-stack)
 - [License](#license)
+- [Contributing](#contributing)
 - [Other handy tools](#other-handy-tools)
 
 ---
@@ -88,6 +89,10 @@ For lessons learnt, you can refer to [notes.md](notes.md).
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for more information.
+
+## Contributing
+
+Refer to [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Other handy tools
 
