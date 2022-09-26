@@ -8,7 +8,7 @@ export const BasicUserInfo = ({ user }: { user: User }) => {
         Signed in: {user.user_metadata.preferred_username || user.email}
       </p>
       <button
-        className="btn btn-secondary"
+        className="btn bg-slate-700"
         onClick={() => supabaseClient.auth.signOut()}
       >
         Sign out

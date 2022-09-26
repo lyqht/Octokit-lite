@@ -41,7 +41,7 @@ export default function Home() {
           <Link href={`/unfork`}>
             <button
               className={`btn flex flex-row items-center justify-center gap-4 shadow ${
-                loading === 0 ? `loading` : ``
+                loading === 0 ? `loading before:order-2 before:ml-2` : ``
               }`}
               onClick={() => setLoading(0)}
             >
@@ -54,12 +54,16 @@ export default function Home() {
           <Link href={`/topicspace`}>
             <button
               className={`btn flex flex-row items-center justify-center gap-4 shadow ${
-                loading === 1 ? `loading` : ``
+                loading === 1 ? `loading before:order-2 before:ml-2` : ``
               }`}
               onClick={() => setLoading(1)}
             >
               <div className="w-12">
-                <Image layout="responsive" src={topicspaceLogo} alt={`topicspace logo`} />
+                <Image
+                  layout="responsive"
+                  src={topicspaceLogo}
+                  alt={`topicspace logo`}
+                />
               </div>
               <p>TopicSpace</p>
             </button>

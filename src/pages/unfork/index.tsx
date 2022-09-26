@@ -1,9 +1,7 @@
 import BackButton from '@/components/BackButton';
 import Footer from '@/components/Footer';
-import RepositoryPicker, {
-  createGroupedOptions,
-} from '@/features/unfork/RepositoryPicker';
 import { server } from '@/config';
+import RepositoryPicker from '@/features/unfork/RepositoryPicker';
 import { GetRepositoriesResponse, Repository } from '@/types/github';
 import {
   getUser,
@@ -11,12 +9,13 @@ import {
   User,
   withPageAuth,
 } from '@supabase/auth-helpers-nextjs';
+import { useMultipleSelection } from 'downshift';
 import Head from 'next/head';
 import Router from 'next/router';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { GroupedOption, Option } from '../../components/RepositoryPicker';
+import { Option } from '../../components/RepositoryPicker';
 
 const Popup = withReactContent(Swal);
 interface Props {
@@ -26,13 +25,27 @@ interface Props {
 
 export default function Unfork({ user, repos = [] }: Props) {
   const session = supabaseClient.auth.session();
-  const [shownOptions, setShownOptions] = useState<GroupedOption[]>(
-    repos ? createGroupedOptions(repos) : [],
-  );
-  const [selectedRepos, setSelectedRepos] = useState<Option[]>([]);
+  const [selectedItems, setSelectedItems] = useState<Option[]>([]);
+  const { getSelectedItemProps, getDropdownProps, removeSelectedItem } =
+    useMultipleSelection<Option>({
+      selectedItems,
+      onStateChange({ selectedItems: newSelectedItems, type }) {
+        switch (type) {
+          case useMultipleSelection.stateChangeTypes
+            .SelectedItemKeyDownBackspace:
+          case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete:
+          case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
+          case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
+            setSelectedItems(newSelectedItems!);
+            break;
+          default:
+            break;
+        }
+      },
+    });
 
   const onDeleteButtonPress = async () => {
-    const reposToBeDeletedTextInBulletPoints = selectedRepos
+    const reposToBeDeletedTextInBulletPoints = selectedItems
       .map((repo) => `- ${repo.label}<br />`)
       .join(``);
     const userInput = await Popup.fire({
@@ -49,8 +62,8 @@ export default function Unfork({ user, repos = [] }: Props) {
       const res = await fetch(
         `api/github?provider_token=${
           session.provider_token
-        }&selectedRepos=${JSON.stringify(
-          selectedRepos.map((repo) => repo.value),
+        }&selectedItems=${JSON.stringify(
+          selectedItems.map((repo) => repo.value),
         )}&userId=${user?.id}`,
         {
           method: `DELETE`,
@@ -96,21 +109,18 @@ export default function Unfork({ user, repos = [] }: Props) {
                     Choose the repositories that you want to delete.
                   </p>
                   <RepositoryPicker
-                    options={shownOptions}
-                    onChange={(selected) => {
-                      setSelectedRepos(selected as Option[]);
-                      const selectedLabels = selected.map((x) => x.label);
-                      const updatedShownRepos = repos.filter(
-                        (x) => !selectedLabels.includes(x.name),
-                      );
-                      setShownOptions(createGroupedOptions(updatedShownRepos));
-                    }}
+                    data={repos}
+                    getSelectedItemProps={getSelectedItemProps}
+                    getDropdownProps={getDropdownProps}
+                    removeSelectedItem={removeSelectedItem}
+                    selectedItems={selectedItems}
+                    setSelectedItems={setSelectedItems}
                   />
                 </div>
                 <div className="flex flex-col gap-4">
                   <button
                     className="btn btn-outline"
-                    disabled={selectedRepos.length === 0}
+                    disabled={selectedItems.length === 0}
                     onClick={onDeleteButtonPress}
                   >
                     Delete
@@ -143,7 +153,9 @@ export const getServerSideProps = withPageAuth({
       `${server}/api/github?provider_token=${provider_token}`,
     );
     const { repos }: GetRepositoriesResponse = await githubResponse.json();
-    const filteredRepos = repos.filter(repo => `${repo.owner.id}` === user.user_metadata.provider_id)
+    const filteredRepos = repos.filter(
+      (repo) => `${repo.owner.id}` === user.user_metadata.provider_id,
+    );
 
     return { props: { user, repos: filteredRepos } };
   },

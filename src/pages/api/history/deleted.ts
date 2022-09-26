@@ -1,6 +1,6 @@
-import { DeletedRecord } from "@/types/github";
-import { NextApiRequest, NextApiResponse } from "next";
-import { supabase } from "../supabase";
+import { DeletedRecord } from '@/types/github';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { supabase } from '../supabase';
 
 type GetDeletedRecordsResponse = DeletedRecord[];
 

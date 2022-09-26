@@ -17,7 +17,9 @@ export const getServerSideProps = withPageAuth({
   redirectTo: `/`,
   async getServerSideProps(ctx) {
     const { user } = await getUser(ctx);
-    const dbResponse = await fetch(`${server}/api/history/updated?userId=${user.id}`);
+    const dbResponse = await fetch(
+      `${server}/api/history/updated?userId=${user.id}`,
+    );
     const items = await dbResponse.json();
 
     return { props: { user, items } };
