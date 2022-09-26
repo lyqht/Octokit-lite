@@ -34,6 +34,7 @@ const RepositoryPicker: React.FC<Props> = ({ options, onChange, formatGroupLabel
     onChange={onChange}
     formatGroupLabel={formatGroupLabel}
     formatOptionLabel={formatOptionLabel}
+    instanceId={`repository-picker`}
   />
 );
 
