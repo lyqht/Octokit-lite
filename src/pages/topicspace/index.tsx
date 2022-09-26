@@ -144,7 +144,8 @@ export const getServerSideProps = withPageAuth({
       `${server}/api/github?provider_token=${provider_token}`,
     );
     const { repos }: GetRepositoriesResponse = await githubResponse.json();
+    const filteredRepos = repos.filter(repo => `${repo.owner.id}` === user.user_metadata.provider_id)
 
-    return { props: { user, repos } };
+    return { props: { user, repos: filteredRepos } };
   },
 });
