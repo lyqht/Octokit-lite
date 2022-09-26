@@ -20,9 +20,18 @@ const formatOptionLabel = (data: Option): ReactElement => (
 
 export const createGroupedOptions = (data: Repository[]) => [
   {
-    label: `Original`,
+    label: `Repos you created`,
     options: data
       .filter((repo) => !repo.fork)
+      .map((repo) => ({
+        value: { owner: repo.owner.login, repo: repo.name },
+        label: repo.name,
+      })),
+  },
+  {
+    label: `Repos you forked`,
+    options: data
+      .filter((repo) => repo.fork)
       .map((repo) => ({
         value: { owner: repo.owner.login, repo: repo.name },
         label: repo.name,
