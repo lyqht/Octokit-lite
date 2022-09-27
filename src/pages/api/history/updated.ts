@@ -1,8 +1,8 @@
-import { HistoryRecord } from '@/types/github';
+import { UpdatedRecord } from '@/types/github';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '../supabase';
 
-type GetDeletedRecordsResponse = HistoryRecord[];
+type GetUpdatedRecordsResponse = UpdatedRecord[];
 
 export interface ErrorResponse {
   message: string;
@@ -10,7 +10,7 @@ export interface ErrorResponse {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<GetDeletedRecordsResponse | ErrorResponse>,
+  res: NextApiResponse<GetUpdatedRecordsResponse | ErrorResponse>,
 ) {
   const { userId } = req.query;
   if (!userId) {
@@ -19,7 +19,7 @@ export default async function handler(
 
   if (req.method === `GET`) {
     const { data, error } = await supabase
-      .from<HistoryRecord>(`UpdatedRecords`)
+      .from<UpdatedRecord>(`UpdatedRecords`)
       .select(`*`)
       .eq(`userId`, `${userId}`);
 

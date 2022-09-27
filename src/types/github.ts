@@ -9,6 +9,7 @@ export type HistoryRecord = {
 };
 
 export type DeletedRecord = definitions['DeletedRecords'];
+export type UpdatedRecord = definitions['UpdatedRecords'];
 
 export type Repository =
   RestEndpointMethodTypes['repos']['get']['response']['data'];
