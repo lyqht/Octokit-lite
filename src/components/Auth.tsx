@@ -22,4 +22,4 @@ export const signInGitHub = async () => {
     { provider: `github` },
     { redirectTo: window.location.origin, scopes: `delete_repo, repo` },
   );
-}
+};

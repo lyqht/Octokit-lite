@@ -1,15 +1,15 @@
 import RepositoryPicker, {
   DownshiftSelectProps,
   GroupedOption,
-  Option,
 } from '@/components/RepositoryPicker';
 import { Repository } from '@/types/github';
+import { RepoOption } from '@/types/select';
 import { UseSelectGetItemPropsOptions } from 'downshift';
 
 export const renderGroupedOptions = (
   groupedOptions: GroupedOption[],
-  getItemProps: (options: UseSelectGetItemPropsOptions<Option>) => any,
-  selectedItems: Option[] | null,
+  getItemProps: (options: UseSelectGetItemPropsOptions<RepoOption>) => any,
+  selectedItems: RepoOption[] | null,
 ) => {
   const options = groupedOptions
     .map((groupedOption) => groupedOption.options)
@@ -72,7 +72,9 @@ export const renderGroupedOptions = (
   );
 };
 
-export const createGroupedOptions = (options: Option[]): GroupedOption[] => [
+export const createGroupedOptions = (
+  options: RepoOption[],
+): GroupedOption[] => [
   {
     label: `Repos you created`,
     options: options.filter((option) => !option.metadata?.fork),
@@ -83,7 +85,7 @@ export const createGroupedOptions = (options: Option[]): GroupedOption[] => [
   },
 ];
 
-export const createOptions = (data: Repository[]): Option[] =>
+export const createOptions = (data: Repository[]): RepoOption[] =>
   data.map((repo) => ({
     value: { owner: repo.owner.login, repo: repo.name },
     label: repo.name,

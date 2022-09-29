@@ -123,7 +123,7 @@ export default function Unfork({ user, repos = [] }: Props) {
                     disabled={selectedItems.length === 0}
                     onClick={onDeleteButtonPress}
                   >
-                    Delete
+                    Next →
                   </button>
                   <button
                     className="btn btn-ghost text-xs"

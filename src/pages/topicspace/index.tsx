@@ -2,6 +2,7 @@ import BackButton from '@/components/BackButton';
 import Footer from '@/components/Footer';
 import { server } from '@/config';
 import RepositoryPicker from '@/features/topicspace/RepositoryPicker';
+import { useMultipleSelection } from '@/hooks/useMultipleSelection';
 import { GetRepositoriesResponse, Repository } from '@/types/github';
 import {
   getUser,
@@ -9,13 +10,14 @@ import {
   User,
   withPageAuth,
 } from '@supabase/auth-helpers-nextjs';
-import { useMultipleSelection } from 'downshift';
 import Head from 'next/head';
 import Router from 'next/router';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { Option } from '../../components/RepositoryPicker';
+import { Option, RepoOption } from '@/types/select';
+import TopicPicker from '../../features/topicspace/TopicPicker';
+import { defaultTopicOptions } from '../../features/topicspace/TopicPicker';
 
 const Popup = withReactContent(Swal);
 interface Props {
@@ -25,29 +27,30 @@ interface Props {
 
 export default function TopicSpace({ user, repos = [] }: Props) {
   const session = supabaseClient.auth.session();
-  const [topics, setTopics] = useState([]);
-  const [selectedItems, setSelectedItems] = useState<Option[]>([]);
+  const [topicInput, setTopicInput] = useState<string>(``);
+  const [topics, setTopics] = useState<Option[]>([]);
+  const [selectedRepos, setSelectedRepos] = useState<RepoOption[]>([]);
 
-  const { getSelectedItemProps, getDropdownProps, removeSelectedItem } =
-    useMultipleSelection<Option>({
-      selectedItems,
-      onStateChange({ selectedItems: newSelectedItems, type }) {
-        switch (type) {
-          case useMultipleSelection.stateChangeTypes
-            .SelectedItemKeyDownBackspace:
-          case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete:
-          case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
-          case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
-            setSelectedItems(newSelectedItems!);
-            break;
-          default:
-            break;
-        }
-      },
-    });
+  const {
+    getSelectedItemProps: getSelectedRepoProps,
+    getDropdownProps: getRepoDropdownProps,
+    removeSelectedItem: removeSelectedRepo,
+  } = useMultipleSelection({
+    selectedItems: selectedRepos,
+    setSelectedItems: setSelectedRepos,
+  });
+
+  const {
+    getSelectedItemProps: getSelectedTopicsProps,
+    getDropdownProps: getTopicDropdownProps,
+    removeSelectedItem: removeSelectedTopic,
+  } = useMultipleSelection({
+    selectedItems: topics,
+    setSelectedItems: setTopics,
+  });
 
   const onActionButtonClick = async () => {
-    const reposToBeUpdated = selectedItems
+    const reposToBeUpdated = selectedRepos
       .map((repo) => `- ${repo.label}<br />`)
       .join(``);
     const userInput = await Popup.fire({
@@ -64,8 +67,10 @@ export default function TopicSpace({ user, repos = [] }: Props) {
       const res = await fetch(
         `api/github?provider_token=${
           session.provider_token
-        }&selectedItems=${JSON.stringify(
-          selectedItems.map((repo) => repo.value),
+        }&repos=${JSON.stringify(
+          selectedRepos.map((repo) => repo.value),
+        )}&topics=${JSON.stringify(
+          topics.map((topic) => topic.value),
         )}&userId=${user?.id}`,
         {
           method: `PUT`,
@@ -83,8 +88,10 @@ export default function TopicSpace({ user, repos = [] }: Props) {
 
   return (
     <div className="flex h-screen flex-col justify-between">
-      <div className="p-16">
-        <BackButton />
+      <div>
+        <div className="m-4">
+          <BackButton />
+        </div>
         <div className="flex h-full flex-col">
           <div className="flex flex-grow flex-col items-center justify-center p-4">
             <Head>
@@ -107,25 +114,42 @@ export default function TopicSpace({ user, repos = [] }: Props) {
                     {` `}
                     repositories.
                   </p>
-                  <p className="py-4">
-                    Choose the repositories that you want to add topics to.
-                  </p>
-                  <RepositoryPicker
-                    data={repos}
-                    getSelectedItemProps={getSelectedItemProps}
-                    getDropdownProps={getDropdownProps}
-                    removeSelectedItem={removeSelectedItem}
-                    selectedItems={selectedItems}
-                    setSelectedItems={setSelectedItems}
-                  />
+                  <div id="topic-selection-container" className="py-4">
+                    <p className="label py-4">
+                      Enter the topic(s) to be added.
+                    </p>
+                    <TopicPicker
+                      options={defaultTopicOptions}
+                      getSelectedItemProps={getSelectedTopicsProps}
+                      getDropdownProps={getTopicDropdownProps}
+                      removeSelectedItem={removeSelectedTopic}
+                      selectedItems={topics}
+                      setSelectedItems={setTopics}
+                      inputValue={topicInput}
+                      setInputValue={setTopicInput}
+                    />
+                  </div>
+                  <div id="repository-selection-container" className="py-4">
+                    <p className="label py-4">
+                      Choose the repositories to add topics to.
+                    </p>
+                    <RepositoryPicker
+                      data={repos}
+                      getSelectedItemProps={getSelectedRepoProps}
+                      getDropdownProps={getRepoDropdownProps}
+                      removeSelectedItem={removeSelectedRepo}
+                      selectedItems={selectedRepos}
+                      setSelectedItems={setSelectedRepos}
+                    />
+                  </div>
                 </div>
                 <div className="flex flex-col gap-4">
                   <button
                     className="btn btn-outline"
-                    disabled={selectedItems.length === 0}
+                    disabled={selectedRepos.length === 0}
                     onClick={onActionButtonClick}
                   >
-                    Delete
+                    Next →
                   </button>
                   <button
                     className="btn btn-ghost text-xs"
