@@ -1,4 +1,4 @@
-import { BasicUserInfo, LoginButton } from '@/components/Auth';
+import { BasicUserInfo, signInGitHub } from '@/components/Auth';
 import Footer from '@/components/Footer';
 import { useUser } from '@supabase/auth-helpers-react';
 import Head from 'next/head';
@@ -35,14 +35,22 @@ export default function Home() {
             />
           </div>
           <h1 className={`mb-12 text-2xl`}>Octokit-lite</h1>
-          {!user && <LoginButton />}
+          {!user && <button
+            className={`btn btn-primary shadow ${loading === 99 ? 'loading before:order-2 before:ml-2' : ''}`}
+            onClick={async () => {
+              setLoading(99)
+              await signInGitHub();
+            }
+            }
+          >
+            Sign in with GitHub
+          </button>}
         </div>
         <div className="flex flex-col items-center gap-8">
           <Link href={`/unfork`}>
             <button
-              className={`btn flex flex-row items-center justify-center gap-4 shadow ${
-                loading === 0 ? `loading before:order-2 before:ml-2` : ``
-              }`}
+              className={`btn flex flex-row items-center justify-center gap-4 shadow ${loading === 0 ? `loading before:order-2 before:ml-2` : ``
+                }`}
               onClick={() => setLoading(0)}
             >
               <div className="w-12">
@@ -53,9 +61,8 @@ export default function Home() {
           </Link>
           <Link href={`/topicspace`}>
             <button
-              className={`btn flex flex-row items-center justify-center gap-4 shadow ${
-                loading === 1 ? `loading before:order-2 before:ml-2` : ``
-              }`}
+              className={`btn flex flex-row items-center justify-center gap-4 shadow ${loading === 1 ? `loading before:order-2 before:ml-2` : ``
+                }`}
               onClick={() => setLoading(1)}
             >
               <div className="w-12">

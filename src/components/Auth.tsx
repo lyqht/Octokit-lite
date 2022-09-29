@@ -9,7 +9,7 @@ export const BasicUserInfo = ({ user }: { user: User }) => {
       </p>
       <button
         className="btn bg-slate-700"
-        onClick={() => supabaseClient.auth.signOut()}
+        onClick={async () => await supabaseClient.auth.signOut()}
       >
         Sign out
       </button>
@@ -17,16 +17,9 @@ export const BasicUserInfo = ({ user }: { user: User }) => {
   );
 };
 
-export const LoginButton = () => (
-  <button
-    className="btn btn-primary"
-    onClick={() =>
-      supabaseClient.auth.signIn(
-        { provider: `github` },
-        { redirectTo: window.location.origin, scopes: `delete_repo, repo` },
-      )
-    }
-  >
-    Sign in with GitHub
-  </button>
-);
+export const signInGitHub = async () => {
+  await supabaseClient.auth.signIn(
+    { provider: `github` },
+    { redirectTo: window.location.origin, scopes: `delete_repo, repo` },
+  );
+}
