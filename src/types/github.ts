@@ -22,8 +22,13 @@ export interface GetRepositoriesResponse {
 }
 
 export interface DeleteRepositoriesResponse {
-  data: HistoryRecord[];
+  data: DeletedRecord[];
 }
+
+export type UpdateRepositoryResponse = Record<
+  string,
+  { prevTopics: string[]; topics: string[]; owner: string }
+>;
 
 export interface ErrorResponse {
   message: string;

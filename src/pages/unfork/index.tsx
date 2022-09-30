@@ -15,7 +15,7 @@ import Router from 'next/router';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { Option } from '../../components/RepositoryPicker';
+import { RepoOption } from '../../types/select';
 
 const Popup = withReactContent(Swal);
 interface Props {
@@ -25,9 +25,9 @@ interface Props {
 
 export default function Unfork({ user, repos = [] }: Props) {
   const session = supabaseClient.auth.session();
-  const [selectedItems, setSelectedItems] = useState<Option[]>([]);
+  const [selectedItems, setSelectedItems] = useState<RepoOption[]>([]);
   const { getSelectedItemProps, getDropdownProps, removeSelectedItem } =
-    useMultipleSelection<Option>({
+    useMultipleSelection<RepoOption>({
       selectedItems,
       onStateChange({ selectedItems: newSelectedItems, type }) {
         switch (type) {

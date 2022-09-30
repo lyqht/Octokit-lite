@@ -4,29 +4,26 @@ import { server } from '@/config';
 import RepositoryPicker from '@/features/topicspace/RepositoryPicker';
 import { useMultipleSelection } from '@/hooks/useMultipleSelection';
 import { GetRepositoriesResponse, Repository } from '@/types/github';
-import {
-  getUser,
-  supabaseClient,
-  User,
-  withPageAuth,
-} from '@supabase/auth-helpers-nextjs';
+import { Option, RepoOption } from '@/types/select';
+import { getUser, User, withPageAuth } from '@supabase/auth-helpers-nextjs';
 import Head from 'next/head';
 import Router from 'next/router';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { Option, RepoOption } from '@/types/select';
-import TopicPicker from '../../features/topicspace/TopicPicker';
-import { defaultTopicOptions } from '../../features/topicspace/TopicPicker';
+import { UpdateRepositoryResponse } from '../../types/github';
+import TopicPicker, {
+  defaultTopicOptions,
+} from '../../features/topicspace/TopicPicker';
 
 const Popup = withReactContent(Swal);
 interface Props {
   user: User;
+  providerToken: string;
   repos: Repository[];
 }
 
-export default function TopicSpace({ user, repos = [] }: Props) {
-  const session = supabaseClient.auth.session();
+export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
   const [topicInput, setTopicInput] = useState<string>(``);
   const [topics, setTopics] = useState<Option[]>([]);
   const [selectedRepos, setSelectedRepos] = useState<RepoOption[]>([]);
@@ -63,21 +60,19 @@ export default function TopicSpace({ user, repos = [] }: Props) {
       confirmButtonText: `Yes, confirm.`,
     });
 
-    if (userInput.isConfirmed && session?.provider_token) {
+    if (userInput.isConfirmed && providerToken) {
       const res = await fetch(
-        `api/github?provider_token=${
-          session.provider_token
-        }&repos=${JSON.stringify(
+        `api/github?provider_token=${providerToken}&repos=${JSON.stringify(
           selectedRepos.map((repo) => repo.value),
         )}&topics=${JSON.stringify(
           topics.map((topic) => topic.value),
         )}&userId=${user?.id}`,
         {
-          method: `PUT`,
+          method: `PATCH`,
         },
       );
-      const resBody = await res.json();
-      const numRepos = resBody.data.length;
+      const data: UpdateRepositoryResponse = await res.json();
+      const numRepos = Object.keys(data).length;
       Popup.fire(
         `Added topics!`,
         `${numRepos} repositories has been modified.`,
@@ -173,16 +168,18 @@ export default function TopicSpace({ user, repos = [] }: Props) {
 export const getServerSideProps = withPageAuth({
   redirectTo: `/`,
   async getServerSideProps(ctx) {
-    const provider_token = ctx.req.cookies[`sb-provider-token`];
+    const providerToken = ctx.req.cookies[`sb-provider-token`];
     const { user } = await getUser(ctx);
     const githubResponse = await fetch(
-      `${server}/api/github?provider_token=${provider_token}`,
+      `${server}/api/github?provider_token=${providerToken}`,
     );
     const { repos }: GetRepositoriesResponse = await githubResponse.json();
     const filteredRepos = repos.filter(
       (repo) => `${repo.owner.id}` === user.user_metadata.provider_id,
     );
 
-    return { props: { user, repos: filteredRepos } };
+    return {
+      props: { user, providerToken, repos: filteredRepos },
+    };
   },
 });
