@@ -175,7 +175,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
           <input
             id={useId()}
             placeholder={inputPlaceholderText}
-            className="input m-1 w-full bg-white"
+            className="input m-1 w-full bg-white text-zinc-600"
             {...getInputProps({
               ...getDropdownProps({ preventKeyAction: isOpen }),
             })}
