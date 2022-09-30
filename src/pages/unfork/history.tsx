@@ -12,9 +12,7 @@ const History: React.FC<Props> = ({ items }) => {
     <HistoryLogs
       items={items}
       renderDescription={(item: HistoryRecord) => {
-        return (
-          <p className="p-1">`Deleted repository at ${item.created_at}`</p>
-        );
+        return <p className="p-1">Deleted repository at {item.created_at}</p>;
       }}
     />
   );

@@ -144,15 +144,14 @@ export default async function handler(
       });
     }
   } else if (req.method === `DELETE`) {
-    const { selectedRepos, userId } = req.query;
-    if (!selectedRepos || !userId) {
+    const { repos, userId } = req.query;
+    if (!repos || !userId) {
       return res.status(400).json({ message: `query parameters missing` });
     }
 
-    const repos = JSON.parse(selectedRepos as string);
+    const parsedRepos = JSON.parse(repos as string);
     const finalResponseData: DeletedRecord[] = [];
-
-    for (const { owner, repo } of repos) {
+    for (const { owner, repo } of parsedRepos) {
       try {
         const getRepoResponse = await octokit.rest.repos.get({ owner, repo });
         const repoDetails: Repository = getRepoResponse.data;

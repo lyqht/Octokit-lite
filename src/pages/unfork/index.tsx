@@ -2,14 +2,9 @@ import BackButton from '@/components/BackButton';
 import Footer from '@/components/Footer';
 import { server } from '@/config';
 import RepositoryPicker from '@/features/unfork/RepositoryPicker';
+import { useMultipleSelection } from '@/hooks/useMultipleSelection';
 import { GetRepositoriesResponse, Repository } from '@/types/github';
-import {
-  getUser,
-  supabaseClient,
-  User,
-  withPageAuth,
-} from '@supabase/auth-helpers-nextjs';
-import { useMultipleSelection } from 'downshift';
+import { getUser, User, withPageAuth } from '@supabase/auth-helpers-nextjs';
 import Head from 'next/head';
 import Router from 'next/router';
 import { useState } from 'react';
@@ -20,28 +15,16 @@ import { RepoOption } from '../../types/select';
 const Popup = withReactContent(Swal);
 interface Props {
   user: User;
+  providerToken: string;
   repos: Repository[];
 }
 
-export default function Unfork({ user, repos = [] }: Props) {
-  const session = supabaseClient.auth.session();
+export default function Unfork({ user, providerToken, repos = [] }: Props) {
   const [selectedItems, setSelectedItems] = useState<RepoOption[]>([]);
   const { getSelectedItemProps, getDropdownProps, removeSelectedItem } =
-    useMultipleSelection<RepoOption>({
+    useMultipleSelection({
       selectedItems,
-      onStateChange({ selectedItems: newSelectedItems, type }) {
-        switch (type) {
-          case useMultipleSelection.stateChangeTypes
-            .SelectedItemKeyDownBackspace:
-          case useMultipleSelection.stateChangeTypes.SelectedItemKeyDownDelete:
-          case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
-          case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
-            setSelectedItems(newSelectedItems!);
-            break;
-          default:
-            break;
-        }
-      },
+      setSelectedItems,
     });
 
   const onDeleteButtonPress = async () => {
@@ -58,11 +41,9 @@ export default function Unfork({ user, repos = [] }: Props) {
       confirmButtonText: `Yes, confirm delete.`,
     });
 
-    if (userInput.isConfirmed && session?.provider_token) {
+    if (userInput.isConfirmed && providerToken) {
       const res = await fetch(
-        `api/github?provider_token=${
-          session.provider_token
-        }&selectedItems=${JSON.stringify(
+        `api/github?provider_token=${providerToken}&repos=${JSON.stringify(
           selectedItems.map((repo) => repo.value),
         )}&userId=${user?.id}`,
         {
@@ -147,16 +128,16 @@ export default function Unfork({ user, repos = [] }: Props) {
 export const getServerSideProps = withPageAuth({
   redirectTo: `/`,
   async getServerSideProps(ctx) {
-    const provider_token = ctx.req.cookies[`sb-provider-token`];
+    const providerToken = ctx.req.cookies[`sb-provider-token`];
     const { user } = await getUser(ctx);
     const githubResponse = await fetch(
-      `${server}/api/github?provider_token=${provider_token}`,
+      `${server}/api/github?provider_token=${providerToken}`,
     );
     const { repos }: GetRepositoriesResponse = await githubResponse.json();
     const filteredRepos = repos.filter(
       (repo) => `${repo.owner.id}` === user.user_metadata.provider_id,
     );
 
-    return { props: { user, repos: filteredRepos } };
+    return { props: { user, providerToken, repos: filteredRepos } };
   },
 });
