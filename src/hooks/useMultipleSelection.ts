@@ -1,5 +1,5 @@
+import { RepoOption } from '@/types/select';
 import { useMultipleSelection as useDownshiftMultipleSelection } from 'downshift';
-import { RepoOption } from '@/components/OptionPicker';
 
 interface Props {
   selectedItems: any[];
