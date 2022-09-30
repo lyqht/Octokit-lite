@@ -1,14 +1,23 @@
 import { server } from '@/config';
 import HistoryLogs from '@/layouts/HistoryLogs';
 import { getUser, withPageAuth } from '@supabase/auth-helpers-nextjs';
-import { HistoryRecord } from '../../types/github';
+import { HistoryRecord, DeletedRecord } from '../../types/github';
 
 interface Props {
   items: HistoryRecord[];
 }
 
 const History: React.FC<Props> = ({ items }) => {
-  return <HistoryLogs items={items} />;
+  return (
+    <HistoryLogs
+      items={items}
+      renderDescription={(item: HistoryRecord) => {
+        return (
+          <p className="p-1">`Deleted repository at ${item.created_at}`</p>
+        );
+      }}
+    />
+  );
 };
 
 export default History;

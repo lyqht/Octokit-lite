@@ -265,9 +265,13 @@ export interface definitions {
     /** Format: uuid */
     userId?: string;
     /** Format: json */
-    initialRepoDetails: unknown;
+    initialRepoDetails: {
+      prevTopics: string[];
+    };
     /** Format: json */
-    updatedFields: unknown;
+    updatedFields: {
+      topics: string[];
+    };
   };
 }
 

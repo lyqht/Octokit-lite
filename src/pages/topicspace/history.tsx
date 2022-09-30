@@ -1,14 +1,40 @@
 import { server } from '@/config';
 import HistoryLogs from '@/layouts/HistoryLogs';
 import { getUser, withPageAuth } from '@supabase/auth-helpers-nextjs';
-import { HistoryRecord } from '../../types/github';
+import { UpdatedRecord, HistoryRecord } from '../../types/github';
 
 interface Props {
-  items: HistoryRecord[];
+  items: UpdatedRecord[];
 }
 
 const History: React.FC<Props> = ({ items }) => {
-  return <HistoryLogs items={items} />;
+  return (
+    <HistoryLogs
+      items={items}
+      renderDescription={(item: HistoryRecord) => {
+        const updatedRecord = item as UpdatedRecord;
+        const addedTopics = updatedRecord.updatedFields.topics.filter(
+          (topic) =>
+            !updatedRecord.initialRepoDetails.prevTopics.includes(topic),
+        );
+        return (
+          <div className="prose">
+            Added {addedTopics.length} topic(s):
+            {addedTopics.map((topic, index) => (
+              <div
+                key={`${item.id}-${topic}-${index}`}
+                className="badge-slate-500 badge m-1"
+              >
+                {topic}
+              </div>
+            ))}
+            {` `}
+            at {item.created_at}
+          </div>
+        );
+      }}
+    />
+  );
 };
 
 export default History;
