@@ -6,6 +6,7 @@ import { useMultipleSelection } from '@/hooks/useMultipleSelection';
 import { GetRepositoriesResponse, Repository } from '@/types/github';
 import { getUser, User, withPageAuth } from '@supabase/auth-helpers-nextjs';
 import Head from 'next/head';
+import router from 'next/router';
 import Router from 'next/router';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
@@ -20,12 +21,17 @@ interface Props {
 }
 
 export default function Unfork({ user, providerToken, repos = [] }: Props) {
+  const [loading, setLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState<RepoOption[]>([]);
   const { getSelectedItemProps, getDropdownProps, removeSelectedItem } =
     useMultipleSelection({
       selectedItems,
       setSelectedItems,
     });
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
 
   const onDeleteButtonPress = async () => {
     const reposToBeDeletedTextInBulletPoints = selectedItems
@@ -42,6 +48,7 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
     });
 
     if (userInput.isConfirmed && providerToken) {
+      setLoading(true);
       const res = await fetch(
         `api/github?provider_token=${providerToken}&repos=${JSON.stringify(
           selectedItems.map((repo) => repo.value),
@@ -57,6 +64,8 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
         `${numReposDeleted} repositories has been deleted.`,
         `success`,
       );
+      setLoading(false);
+      refreshData();
     }
   };
 
@@ -81,7 +90,7 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
                   <p>
                     You have a total of{` `}
                     <span className="rounded-t-lg bg-slate-500 px-2 text-white underline underline-offset-4">
-                      {repos.length}
+                      {loading ? `...` : repos.length}
                     </span>
                     {` `}
                     repositories.
@@ -100,7 +109,9 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
                 </div>
                 <div className="flex flex-col gap-4">
                   <button
-                    className="btn btn-outline"
+                    className={`btn btn-outline ${
+                      loading ? `loading before:order-2 before:ml-2` : ``
+                    }`}
                     disabled={selectedItems.length === 0}
                     onClick={onDeleteButtonPress}
                   >
