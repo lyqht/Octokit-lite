@@ -14,13 +14,9 @@
 
 <br />
 
-> Unfork has been rebranded to Octokit-lite to host more functionalities!
-
-
 At the moment, Octokit lite has the following functionalities:
-- [Unfork](#unfork)  <img width='24' src='public/unfork_logo.png' /> — identify all the forks that you have made over the _months_ or _years_ and **unfork** them all!
-- (coming soon!) [TopicSpace](#topicspace) — a handy tool for project maintainers to apply a topic to all the repositories that you want!
-
+- [Unfork](#unfork) <img width='24' src='public/unfork_logo.png' /> — identify all the forks that you have made over the _months_ or _years_ and **unfork** them all!
+- [TopicSpace](#topicspace) <img width='24' src='public/topicspace_logo.svg' /> — a handy tool for project maintainers to add topic(s) to all the repositories that you want!
 
 ---
 
@@ -30,6 +26,7 @@ At the moment, Octokit lite has the following functionalities:
   - [Demo](#demo)
 - [TopicSpace](#topicspace)
   - [Features](#features-1)
+  - [Demo](#demo-1)
 - [Tech Stack](#tech-stack)
 - [License](#license)
 - [Contributing](#contributing)
@@ -40,14 +37,20 @@ At the moment, Octokit lite has the following functionalities:
 
 ## Unfork
 
+Delete repositories easily with Unfork.
+
+<details><summary>Idea behind Unfork</summary>
 GitHub forks tend to be created for the following reasons:
 1. Following tutorials 📖
-1. Contributing to open source projects (especially during [Hacktoberfest](https://hacktoberfest.com/)!) 💻
-1. GitHub automatically forking stuff for you when you just wanted to view the source code for a particular file of a project 😆
+2. Contributing to open source projects (especially during [Hacktoberfest](https://hacktoberfest.com/)!) 💻
+3. GitHub automatically forking stuff for you when you just wanted to view the source code for a particular file of a project 😆
 
 After months and years, usually these forks still stay in your repository — and that's because of how _inconvenient_ it is to identify and delete the many forks that you have made.
 
 Unfork helps you to solve that problem **easily** ✨
+</details>
+
+<img src='screenshots/unfork_preview.png' width='400' />
 
 ### Features
 
@@ -59,20 +62,26 @@ Unfork helps you to solve that problem **easily** ✨
 
 ### Demo
 
-![](demo.gif)
+![](screenshots/Octokitlite-Unfork-Demo.gif)
 
 ## TopicSpace
 
 Apply any topic you like e.g. `Hacktoberfest` to the repositories that you own.
 
+<img src='screenshots/topicspace_preview.png' />
+
 ### Features
  
-- [] You can choose multiple topics and apply it to all of the repos you have selected
-- [] Show list of autocompleted topics that user can select after user types in some input (just like in GitHub)
-- [] In the repository picker
-  - [] Show list of existing topics that they have
-- [] Allow users to filters repos by issue count and by inactivity level
-- [] Preview of repo upon hover on repo item: show repo name, description, stars etc like a GitHub repo card
+- [x] You can choose multiple topics and apply it to all of the repos you have selected
+- [ ] Show list of autocompleted topics that user can select after user types in some input (just like in GitHub)
+- [ ] In the repository picker
+  - [ ] Show list of existing topics that they have
+- [ ] Allow users to filters repos by issue count and by inactivity level
+- [ ] Preview of repo upon hover on repo item: show repo name, description, stars etc like a GitHub repo card
+
+### Demo
+
+![](screenshots/Octokitlite-TopicSpace-Demo.gif)
 
 ## Tech Stack
 
