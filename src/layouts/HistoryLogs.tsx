@@ -9,7 +9,7 @@ interface Props {
 
 const HistoryLogs: FC<Props> = ({ items, renderDescription }) => {
   return (
-    <div>
+    <div className="flex h-screen flex-col justify-between">
       <div className="p-4">
         <BackButton />
         {items.map((item) => (
