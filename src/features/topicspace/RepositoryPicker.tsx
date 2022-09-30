@@ -14,9 +14,9 @@ export const renderGroupedOptions = (
   const options = groupedOptions
     .map((groupedOption) => groupedOption.options)
     .flat();
-  return groupedOptions.map((group) =>
+  return groupedOptions.map((group, groupIndex) =>
     group.options.length > 0 ? (
-      <div key={`group-${group.label}`}>
+      <div key={`group-${group.label}-${groupIndex}`}>
         <div className="flew-row flex items-center bg-slate-600 px-4 py-2 text-white">
           <span className="w-1/2">
             {group.label}
@@ -26,21 +26,15 @@ export const renderGroupedOptions = (
         </div>
         {group.options.map((item, index) => (
           <li
-            className={`
-          ${
-            selectedItems?.findIndex(
-              (selectedItem) => selectedItem.label === item.label,
-            ) != -1
-              ? `bg-slate-700 hover:bg-slate-800`
-              : `bg-zinc-700 hover:bg-zinc-800`
-          }
-           prose-base flex
-          cursor-pointer flex-row
-          items-center justify-between py-2
-          px-3
-          shadow-sm
-          `}
             key={`option-${item.label}-${index}`}
+            className={`prose-base flex cursor-pointer flex-row items-center justify-between py-2 px-3 shadow-sm 
+            ${
+              selectedItems?.findIndex(
+                (selectedItem) => selectedItem.label === item.label,
+              ) != -1
+                ? `bg-slate-700 hover:bg-slate-800`
+                : `bg-zinc-700 hover:bg-zinc-800`
+            }`}
             {...getItemProps({
               item,
               index: options.findIndex((a) => a.label === item.label),
@@ -49,9 +43,9 @@ export const renderGroupedOptions = (
             <span className="w-1/2 text-sm text-white">{item.label}</span>
             <div className="w-1/2">
               {item.metadata?.topics && item.metadata?.topics.length > 0 ? (
-                item.metadata?.topics.map((topic) => (
+                item.metadata?.topics.map((topic, i) => (
                   <p
-                    key={`topic-${topic}`}
+                    key={`topic-${topic}-${i}`}
                     className="badge-neutral-content badge badge-outline m-0 mr-1"
                   >
                     {topic}

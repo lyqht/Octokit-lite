@@ -6,7 +6,7 @@ import {
   UseMultipleSelectionGetDropdownProps,
   UseMultipleSelectionGetSelectedItemPropsOptions,
 } from 'downshift';
-import { ReactElement } from 'react';
+import { ReactElement, useId } from 'react';
 import { GroupedOption } from './RepositoryPicker';
 
 export interface DownshiftSelectProps {
@@ -46,6 +46,7 @@ export interface OptionPickerProps
   options: Option[];
   setInputValue: (s: string) => void;
   inputPlaceholderText?: string;
+  isCreateable?: boolean;
 }
 
 const OptionPicker: React.FC<OptionPickerProps> = ({
@@ -53,6 +54,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
   renderOptions,
   groupedOptions,
   renderGroupedOptions,
+  inputValue,
   setInputValue,
   inputPlaceholderText = `Type a repository name`,
   getSelectedItemProps,
@@ -60,7 +62,11 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
   removeSelectedItem,
   selectedItems,
   setSelectedItems,
+  isCreateable = false, // only works for ungrouped option for now
 }) => {
+  const items = isCreateable
+    ? [{ label: inputValue, value: inputValue }].concat(options)
+    : options;
   const {
     isOpen,
     getToggleButtonProps,
@@ -70,7 +76,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
     setHighlightedIndex,
     getItemProps,
   } = useCombobox({
-    items: options,
+    items,
     itemToString(item) {
       return item ? item.label : ``;
     },
@@ -130,12 +136,12 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
     if (renderGroupedOptions && groupedOptions) {
       return renderGroupedOptions(groupedOptions, getItemProps, selectedItems);
     } else {
-      return renderOptions?.(options, getItemProps, selectedItems);
+      return renderOptions?.(items, getItemProps, selectedItems);
     }
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full" id={useId()}>
       <div
         className="flex w-full grow flex-row flex-wrap items-center gap-1 rounded-lg border-2 bg-white p-1.5 shadow-sm"
         {...getToggleButtonProps()}
@@ -167,6 +173,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
         })}
         <div className="w-full" {...getComboboxProps()}>
           <input
+            id={useId()}
             placeholder={inputPlaceholderText}
             className="input m-1 w-full bg-white"
             {...getInputProps({
