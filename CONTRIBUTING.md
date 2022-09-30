@@ -49,12 +49,23 @@ create table DeletedRecords (
   repo text not null,
   sourceRepo text,
   isFork boolean not null,
-  userId uuid default uuid_generate_v4(),
+  userId uuid,
   repoDetails json not null
 );
+
+
+create table UpdatedRecords (
+  id bigint not null primary key,
+  created_at timestamp default now(),
+  repo text not null,
+  userId uuid,
+  initialRepoDetails json not null,
+  updatedFields json not null
+);
+
 ```
 
-> Thanks Zernonia! This script is generated using [supabase-schema](https://github.com/zernonia/supabase-schema).
+> Thanks Zernonia! This create table script is generated using [supabase-schema](https://github.com/zernonia/supabase-schema).
 
 Then you need to add additional auth URLs to your project, depending on the URL you spin up the app on.
 

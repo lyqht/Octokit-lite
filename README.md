@@ -5,10 +5,6 @@
     <p><i>An app to help you perform handy operations for your GitHub repositories (especially during <a href="https://hacktoberfest.com/">Hacktoberfest</a>!)</i></p>
   </div>
   <a href="https://gitpod.io/github.com/lyqht/Octokit-lite/">
-    <img
-      src="https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod"
-      alt="Contribute with Gitpod"
-    />
   </a>
 </div>
 
@@ -100,6 +96,11 @@ For lessons learnt, you can refer to [notes.md](notes.md).
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for more information.
 
 ## Contributing
+
+<img
+  src="https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod"
+  alt="Contribute with Gitpod"
+/>
 
 Refer to [CONTRIBUTING.md](CONTRIBUTING.md).
 
