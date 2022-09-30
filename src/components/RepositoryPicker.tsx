@@ -1,25 +1,13 @@
+import { Option } from '@/types/select';
 import {
   GetPropsCommonOptions,
   UseComboboxGetItemPropsOptions,
   UseMultipleSelectionGetDropdownProps,
   UseMultipleSelectionGetSelectedItemPropsOptions,
 } from 'downshift';
-import { Option } from '@/types/select';
 import { ReactElement, useMemo, useState } from 'react';
-import OptionPicker from './OptionPicker';
 import { RepoOption } from '../types/select';
-
-function getFilteredItems(
-  options: Option[],
-  selectedItems: Option[],
-  inputValue: string,
-) {
-  return options.filter(
-    (option) =>
-      !selectedItems.includes(option) &&
-      option.label.toLowerCase().includes(inputValue.toLowerCase()),
-  );
-}
+import OptionPicker, { getFilteredItems } from './OptionPicker';
 
 const RepositoryPicker: React.FC<Props> = ({
   options,

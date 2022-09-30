@@ -6,7 +6,7 @@ import {
   UseMultipleSelectionGetDropdownProps,
   UseMultipleSelectionGetSelectedItemPropsOptions,
 } from 'downshift';
-import { createRef, ReactElement, useId } from 'react';
+import { ReactElement, useId } from 'react';
 import { GroupedOption } from './RepositoryPicker';
 
 export interface DownshiftSelectProps {
@@ -49,6 +49,18 @@ export interface OptionPickerProps
   isCreateable?: boolean;
 }
 
+export function getFilteredItems(
+  options: Option[],
+  selectedItems: Option[],
+  inputValue: string,
+) {
+  return options.filter(
+    (option) =>
+      !selectedItems.includes(option) &&
+      option.label.toLowerCase().includes(inputValue.toLowerCase()),
+  );
+}
+
 const OptionPicker: React.FC<OptionPickerProps> = ({
   options,
   renderOptions,
@@ -65,8 +77,10 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
   isCreateable = false, // only works for ungrouped option for now
 }) => {
   const items = isCreateable
-    ? [{ label: inputValue, value: inputValue }].concat(options)
-    : options;
+    ? [{ label: inputValue, value: inputValue }].concat(
+        getFilteredItems(options, selectedItems, inputValue),
+      )
+    : getFilteredItems(options, selectedItems, inputValue);
   const {
     isOpen,
     getToggleButtonProps,
