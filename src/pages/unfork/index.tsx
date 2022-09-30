@@ -1,38 +1,40 @@
 import BackButton from '@/components/BackButton';
 import Footer from '@/components/Footer';
-import RepositoryPicker, {
-  createGroupedOptions,
-} from '@/components/RepositoryPicker';
 import { server } from '@/config';
+import RepositoryPicker from '@/features/unfork/RepositoryPicker';
+import { useMultipleSelection } from '@/hooks/useMultipleSelection';
 import { GetRepositoriesResponse, Repository } from '@/types/github';
-import {
-  getUser,
-  supabaseClient,
-  User,
-  withPageAuth,
-} from '@supabase/auth-helpers-nextjs';
+import { getUser, User, withPageAuth } from '@supabase/auth-helpers-nextjs';
 import Head from 'next/head';
+import router from 'next/router';
 import Router from 'next/router';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { GroupedOption, Option } from '../../components/RepositoryPicker';
+import { RepoOption } from '../../types/select';
 
 const Popup = withReactContent(Swal);
 interface Props {
   user: User;
+  providerToken: string;
   repos: Repository[];
 }
 
-export default function Unfork({ user, repos = [] }: Props) {
-  const session = supabaseClient.auth.session();
-  const [shownOptions, setShownOptions] = useState<GroupedOption[]>(
-    repos ? createGroupedOptions(repos) : [],
-  );
-  const [selectedRepos, setSelectedRepos] = useState<Option[]>([]);
+export default function Unfork({ user, providerToken, repos = [] }: Props) {
+  const [loading, setLoading] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<RepoOption[]>([]);
+  const { getSelectedItemProps, getDropdownProps, removeSelectedItem } =
+    useMultipleSelection({
+      selectedItems,
+      setSelectedItems,
+    });
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
 
   const onDeleteButtonPress = async () => {
-    const reposToBeDeletedTextInBulletPoints = selectedRepos
+    const reposToBeDeletedTextInBulletPoints = selectedItems
       .map((repo) => `- ${repo.label}<br />`)
       .join(``);
     const userInput = await Popup.fire({
@@ -45,12 +47,11 @@ export default function Unfork({ user, repos = [] }: Props) {
       confirmButtonText: `Yes, confirm delete.`,
     });
 
-    if (userInput.isConfirmed && session?.provider_token) {
+    if (userInput.isConfirmed && providerToken) {
+      setLoading(true);
       const res = await fetch(
-        `api/github?provider_token=${
-          session.provider_token
-        }&selectedRepos=${JSON.stringify(
-          selectedRepos.map((repo) => repo.value),
+        `api/github?provider_token=${providerToken}&repos=${JSON.stringify(
+          selectedItems.map((repo) => repo.value),
         )}&userId=${user?.id}`,
         {
           method: `DELETE`,
@@ -63,6 +64,8 @@ export default function Unfork({ user, repos = [] }: Props) {
         `${numReposDeleted} repositories has been deleted.`,
         `success`,
       );
+      setLoading(false);
+      refreshData();
     }
   };
 
@@ -87,7 +90,7 @@ export default function Unfork({ user, repos = [] }: Props) {
                   <p>
                     You have a total of{` `}
                     <span className="rounded-t-lg bg-slate-500 px-2 text-white underline underline-offset-4">
-                      {repos.length}
+                      {loading ? `...` : repos.length}
                     </span>
                     {` `}
                     repositories.
@@ -96,24 +99,23 @@ export default function Unfork({ user, repos = [] }: Props) {
                     Choose the repositories that you want to delete.
                   </p>
                   <RepositoryPicker
-                    options={shownOptions}
-                    onChange={(selected) => {
-                      setSelectedRepos(selected as Option[]);
-                      const selectedLabels = selected.map((x) => x.label);
-                      const updatedShownRepos = repos.filter(
-                        (x) => !selectedLabels.includes(x.name),
-                      );
-                      setShownOptions(createGroupedOptions(updatedShownRepos));
-                    }}
+                    data={repos}
+                    getSelectedItemProps={getSelectedItemProps}
+                    getDropdownProps={getDropdownProps}
+                    removeSelectedItem={removeSelectedItem}
+                    selectedItems={selectedItems}
+                    setSelectedItems={setSelectedItems}
                   />
                 </div>
                 <div className="flex flex-col gap-4">
                   <button
-                    className="btn btn-outline"
-                    disabled={selectedRepos.length === 0}
+                    className={`btn btn-outline ${
+                      loading ? `loading before:order-2 before:ml-2` : ``
+                    }`}
+                    disabled={selectedItems.length === 0}
                     onClick={onDeleteButtonPress}
                   >
-                    Delete
+                    Next →
                   </button>
                   <button
                     className="btn btn-ghost text-xs"
@@ -121,7 +123,7 @@ export default function Unfork({ user, repos = [] }: Props) {
                       Router.push(`/unfork/history`);
                     }}
                   >
-                    View what you have deleted using Unfork
+                    View what you have deleted using Octokit-lite
                   </button>
                 </div>
               </div>
@@ -137,13 +139,16 @@ export default function Unfork({ user, repos = [] }: Props) {
 export const getServerSideProps = withPageAuth({
   redirectTo: `/`,
   async getServerSideProps(ctx) {
-    const provider_token = ctx.req.cookies[`sb-provider-token`];
+    const providerToken = ctx.req.cookies[`sb-provider-token`];
     const { user } = await getUser(ctx);
     const githubResponse = await fetch(
-      `${server}/api/github?provider_token=${provider_token}`,
+      `${server}/api/github?provider_token=${providerToken}`,
     );
     const { repos }: GetRepositoriesResponse = await githubResponse.json();
+    const filteredRepos = repos.filter(
+      (repo) => `${repo.owner.id}` === user.user_metadata.provider_id,
+    );
 
-    return { props: { user, repos } };
+    return { props: { user, providerToken, repos: filteredRepos } };
   },
 });

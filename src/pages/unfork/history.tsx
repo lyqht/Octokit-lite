@@ -8,7 +8,14 @@ interface Props {
 }
 
 const History: React.FC<Props> = ({ items }) => {
-  return <HistoryLogs items={items} />;
+  return (
+    <HistoryLogs
+      items={items}
+      renderDescription={(item: HistoryRecord) => {
+        return <p className="p-1">Deleted repository at {item.created_at}</p>;
+      }}
+    />
+  );
 };
 
 export default History;
@@ -17,7 +24,9 @@ export const getServerSideProps = withPageAuth({
   redirectTo: `/`,
   async getServerSideProps(ctx) {
     const { user } = await getUser(ctx);
-    const dbResponse = await fetch(`${server}/api/supabase?userId=${user.id}`);
+    const dbResponse = await fetch(
+      `${server}/api/history/deleted?userId=${user.id}`,
+    );
     const items = await dbResponse.json();
 
     return { props: { user, items } };

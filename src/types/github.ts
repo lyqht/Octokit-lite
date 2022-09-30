@@ -1,7 +1,9 @@
 import { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
 import { definitions } from './supabase';
 
-export type HistoryRecord = definitions['DeletedRecords'];
+export type DeletedRecord = definitions['DeletedRecords'];
+export type UpdatedRecord = definitions['UpdatedRecords'];
+export type HistoryRecord = DeletedRecord | UpdatedRecord;
 
 export type Repository =
   RestEndpointMethodTypes['repos']['get']['response']['data'];
@@ -14,8 +16,13 @@ export interface GetRepositoriesResponse {
 }
 
 export interface DeleteRepositoriesResponse {
-  data: HistoryRecord[];
+  data: DeletedRecord[];
 }
+
+export type UpdateRepositoryResponse = Record<
+  string,
+  { prevTopics: string[]; topics: string[]; owner: string }
+>;
 
 export interface ErrorResponse {
   message: string;
