@@ -1,7 +1,7 @@
 import { server } from '@/config';
 import HistoryLogs from '@/layouts/HistoryLogs';
 import { getUser, withPageAuth } from '@supabase/auth-helpers-nextjs';
-import { HistoryRecord, DeletedRecord } from '../../types/github';
+import { HistoryRecord } from '../../types/github';
 
 interface Props {
   items: HistoryRecord[];
