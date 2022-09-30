@@ -6,7 +6,7 @@ import {
   UseMultipleSelectionGetDropdownProps,
   UseMultipleSelectionGetSelectedItemPropsOptions,
 } from 'downshift';
-import { ReactElement, useId } from 'react';
+import { createRef, ReactElement, useId } from 'react';
 import { GroupedOption } from './RepositoryPicker';
 
 export interface DownshiftSelectProps {
@@ -120,6 +120,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
               options.findIndex((item) => item.label === newSelectedItem.label),
             );
           }
+          setInputValue(``);
           break;
 
         case useCombobox.stateChangeTypes.InputChange:
