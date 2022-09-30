@@ -69,9 +69,8 @@ Apply any topic you like e.g. `Hacktoberfest` to the repositories that you own.
 ### Features
  
 - [x] You can choose multiple topics and apply it to all of the repos you have selected
+- [x] Show list of existing topics that the repositories have
 - [ ] Show list of autocompleted topics that user can select after user types in some input (just like in GitHub)
-- [ ] In the repository picker
-  - [ ] Show list of existing topics that they have
 - [ ] Allow users to filters repos by issue count and by inactivity level
 - [ ] Preview of repo upon hover on repo item: show repo name, description, stars etc like a GitHub repo card
 
@@ -84,7 +83,6 @@ Apply any topic you like e.g. `Hacktoberfest` to the repositories that you own.
 This project is bootstrapped by:
 - [Typescript Next.js starter by @jpedroschmitz](https://github.com/jpedroschmitz/typescript-nextjs-starter)
 - [Supabase](https://github.com/supabase/supabase/)
-- [React Select](https://react-select.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [DaisyUI](https://github.com/saadeghi/daisyui)
 - [Octokit.js](https://github.com/octokit/octokit.js/)
