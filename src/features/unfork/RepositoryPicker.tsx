@@ -59,12 +59,12 @@ export const renderGroupedOptions = (
 
 export const createGroupedOptions = (options: Option[]): GroupedOption[] => [
   {
-    label: `Repos you created`,
-    options: options.filter((option) => !option.metadata?.fork),
-  },
-  {
     label: `Repos you forked`,
     options: options.filter((option) => option.metadata?.fork),
+  },
+  {
+    label: `Repos you created`,
+    options: options.filter((option) => !option.metadata?.fork),
   },
 ];
 
