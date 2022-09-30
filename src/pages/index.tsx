@@ -53,12 +53,17 @@ export default function Home() {
           <Link href={`/unfork`}>
             <button
               className={`btn flex flex-row items-center justify-center gap-4 shadow ${
-                loading === 0 ? `loading before:order-2 before:ml-2` : ``
-              }`}
+                user ? `` : `btn-disabled`
+              } ${loading === 0 ? `loading before:order-2 before:ml-2` : ``}`}
               onClick={() => setLoading(0)}
             >
               <div className="w-12">
-                <Image layout="responsive" src={unforkLogo} alt={`Unfork`} />
+                <Image
+                  layout="responsive"
+                  src={unforkLogo}
+                  alt={`Unfork`}
+                  className={`${user ? `` : `opacity-60`}`}
+                />
               </div>
               <p>Unfork</p>
             </button>
@@ -66,14 +71,15 @@ export default function Home() {
           <Link href={`/topicspace`}>
             <button
               className={`btn flex flex-row items-center justify-center gap-4 shadow ${
-                loading === 1 ? `loading before:order-2 before:ml-2` : ``
-              }`}
+                user ? `` : `btn-disabled`
+              } ${loading === 1 ? `loading before:order-2 before:ml-2` : ``}`}
               onClick={() => setLoading(1)}
             >
               <div className="w-12">
                 <Image
                   layout="responsive"
                   src={topicspaceLogo}
+                  className={`${user ? `` : `opacity-60`}`}
                   alt={`topicspace logo`}
                 />
               </div>
