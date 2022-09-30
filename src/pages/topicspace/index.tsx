@@ -153,7 +153,7 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
                     className={`btn btn-outline ${
                       loading ? `loading before:order-2 before:ml-2` : ``
                     }`}
-                    disabled={selectedRepos.length === 0}
+                    disabled={selectedRepos.length === 0 && topics.length === 0}
                     onClick={onActionButtonClick}
                   >
                     Next →
