@@ -15,6 +15,7 @@ import { UpdateRepositoryResponse } from '../../types/github';
 import TopicPicker, {
   defaultTopicOptions,
 } from '../../features/topicspace/TopicPicker';
+import router from 'next/router';
 
 const Popup = withReactContent(Swal);
 interface Props {
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
+  const [loading, setLoading] = useState(false);
   const [topicInput, setTopicInput] = useState<string>(``);
   const [topics, setTopics] = useState<Option[]>([]);
   const [selectedRepos, setSelectedRepos] = useState<RepoOption[]>([]);
@@ -46,6 +48,10 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
     setSelectedItems: setTopics,
   });
 
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+
   const onActionButtonClick = async () => {
     const reposToBeUpdated = selectedRepos
       .map((repo) => `- ${repo.label}<br />`)
@@ -61,6 +67,7 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
     });
 
     if (userInput.isConfirmed && providerToken) {
+      setLoading(true);
       const res = await fetch(
         `api/github?provider_token=${providerToken}&repos=${JSON.stringify(
           selectedRepos.map((repo) => repo.value),
@@ -79,6 +86,9 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
         `success`,
       );
     }
+
+    setLoading(false);
+    refreshData();
   };
 
   return (
@@ -140,7 +150,9 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
                 </div>
                 <div className="flex flex-col gap-4">
                   <button
-                    className="btn btn-outline"
+                    className={`btn btn-outline ${
+                      loading ? `loading before:order-2 before:ml-2` : ``
+                    }`}
                     disabled={selectedRepos.length === 0}
                     onClick={onActionButtonClick}
                   >
