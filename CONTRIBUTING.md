@@ -43,24 +43,24 @@ Please refer to `.env.template` for the env variables you may need. I am not goi
 For tables, you need to create these table(s).
 
 ```
-create table DeletedRecords (
+create table "DeletedRecords" (
   id bigint not null primary key,
   created_at timestamp default now(),
   repo text not null,
-  sourceRepo text,
-  isFork boolean not null,
-  userId uuid,
-  repoDetails json not null
+  "sourceRepo" text,
+  "isFork" boolean not null,
+  "userId" uuid,
+  "repoDetails" json not null
 );
 
 
-create table UpdatedRecords (
+create table "UpdatedRecords" (
   id bigint not null primary key,
   created_at timestamp default now(),
   repo text not null,
-  userId uuid,
-  initialRepoDetails json not null,
-  updatedFields json not null
+  "userId" uuid,
+  "initialRepoDetails" json not null,
+  "updatedFields" json not null
 );
 
 ```
