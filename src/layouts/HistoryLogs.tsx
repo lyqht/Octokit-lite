@@ -12,12 +12,30 @@ const HistoryLogs: FC<Props> = ({ items, renderDescription }) => {
     <div className="flex h-screen flex-col justify-between">
       <div className="p-4">
         <BackButton />
-        {items.map((item) => (
-          <div className="flex flex-row gap-4 p-4" key={item.id}>
-            <p className="p-1">{item.repo}</p>
-            {renderDescription ? renderDescription(item) : ``}
-          </div>
-        ))}
+        <table className="table-zebra table w-full">
+          <thead>
+            <tr>
+              <th>𝗜𝗗</th>
+              <td>
+                <span className="px-2 font-bold">𝗡𝗔𝗠𝗘</span>
+              </td>
+              <td>
+                <p className="px-1">𝗔𝗖𝗧𝗜𝗢𝗡</p>
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item, i) => (
+              <tr key={item.id}>
+                <th>{i + 1}.</th>
+                <td>
+                  <p className="px-2">{item.repo}</p>
+                </td>
+                <td>{renderDescription ? renderDescription(item) : ``}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <Footer />
     </div>

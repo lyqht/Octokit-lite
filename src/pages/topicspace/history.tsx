@@ -29,7 +29,7 @@ const History: React.FC<Props> = ({ items }) => {
               </div>
             ))}
             {` `}
-            at {item.created_at}
+            at {new Date(item.created_at as string).toLocaleString()}
           </div>
         );
       }}
