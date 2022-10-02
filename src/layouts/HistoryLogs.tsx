@@ -10,28 +10,30 @@ interface Props {
 const HistoryLogs: FC<Props> = ({ items, renderDescription }) => {
   return (
     <div className="flex h-screen flex-col justify-between">
-      <div className="p-4">
-        <BackButton />
-        <table className="table-zebra table w-full">
+      <div className="flex flex-col items-center gap-4 p-4">
+        <div className="flex w-full lg:w-4/5">
+          <BackButton />
+        </div>
+        <table className="table-zebra table w-full lg:w-4/5">
           <thead>
             <tr>
-              <th>𝗜𝗗</th>
-              <td>
-                <span className="px-2 font-bold">𝗡𝗔𝗠𝗘</span>
-              </td>
-              <td>
-                <p className="px-1">𝗔𝗖𝗧𝗜𝗢𝗡</p>
-              </td>
+              <th className="bg-secondary pl-2 pr-4 text-center font-mono text-sm">
+                ID
+              </th>
+              <th className="bg-secondary font-mono text-sm">NAME</th>
+              <th className="bg-secondary font-mono text-sm">ACTIONS</th>
             </tr>
           </thead>
           <tbody>
             {items.map((item, i) => (
               <tr key={item.id}>
-                <th>{i + 1}.</th>
-                <td>
-                  <p className="px-2">{item.repo}</p>
+                <th className="py-3 pl-2 pr-4 text-center">{i + 1}.</th>
+                <td className="p-3">
+                  <code className="text-sm">{item.repo}</code>
                 </td>
-                <td>{renderDescription ? renderDescription(item) : ``}</td>
+                <td className="whitespace-pre-line p-2">
+                  {renderDescription ? renderDescription(item) : ``}
+                </td>
               </tr>
             ))}
           </tbody>
