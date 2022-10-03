@@ -36,6 +36,7 @@ const RepositoryPicker: React.FC<Props> = ({
 
   useEffect(() => {
     setGroupedOptions(createFilteredGroupedOptions());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(options), inputValue, JSON.stringify(selectedItems)]);
 
   const items = useMemo(
