@@ -21,3 +21,15 @@ export interface Option {
   readonly label: string;
   readonly metadata?: any;
 }
+
+export interface GroupedOption {
+  readonly label: string;
+  readonly options: RepoOption[];
+}
+
+export enum SortOrder {
+  'descending',
+  'ascending',
+}
+export type Filters = Partial<Record<keyof RepoMetadata, SortOrder | null>>;
+export type GroupFilters = Record<number, Filters>;

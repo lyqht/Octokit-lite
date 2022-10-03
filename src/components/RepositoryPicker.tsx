@@ -1,12 +1,18 @@
-import { Option } from '@/types/select';
+import {
+  GroupedOption,
+  GroupFilters,
+  Option,
+  RepoMetadata,
+  RepoOption,
+  SortOrder,
+} from '@/types/select';
 import {
   GetPropsCommonOptions,
   UseComboboxGetItemPropsOptions,
   UseMultipleSelectionGetDropdownProps,
   UseMultipleSelectionGetSelectedItemPropsOptions,
 } from 'downshift';
-import { ReactElement, useMemo, useState, useEffect } from 'react';
-import { RepoOption } from '../types/select';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import OptionPicker, { getFilteredItems } from './OptionPicker';
 
 const RepositoryPicker: React.FC<Props> = ({
@@ -20,6 +26,7 @@ const RepositoryPicker: React.FC<Props> = ({
   setSelectedItems,
 }) => {
   const [inputValue, setInputValue] = useState<string>(``);
+  const [sortFilters, setSortFilters] = useState<GroupFilters>({});
   const createFilteredGroupedOptions = () =>
     createGroupedOptions(options).map((groupedOption) => ({
       ...groupedOption,
@@ -34,10 +41,51 @@ const RepositoryPicker: React.FC<Props> = ({
     createFilteredGroupedOptions(),
   );
 
+  const sortGroup = (
+    index: number,
+    filterType: keyof RepoMetadata,
+    filterValue: SortOrder | null,
+  ) => {
+    const updatedGroupOptions = [...groupedOptions];
+    updatedGroupOptions[index].options.sort((a: RepoOption, b: RepoOption) => {
+      if (filterType == `lastPushDate`) {
+        const x = a.metadata?.[filterType] || `1900-04-10T10:20:30Z`;
+        const y = b.metadata?.[filterType] || `1900-04-10T10:20:30Z`;
+
+        if (filterValue == SortOrder.ascending) {
+          return x.localeCompare(y);
+        } else if (filterValue == SortOrder.descending) {
+          return y.localeCompare(x);
+        }
+      }
+
+      // for future filter types
+      return 0;
+    });
+
+    setGroupedOptions(updatedGroupOptions);
+  };
+  const updateFilters = (filters: GroupFilters) => {
+    setSortFilters({ ...sortFilters, ...filters });
+  };
+
   useEffect(() => {
     setGroupedOptions(createFilteredGroupedOptions());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(options), inputValue, JSON.stringify(selectedItems)]);
+
+  useEffect(() => {
+    Object.entries(sortFilters).forEach(([groupIndex, filters]) => {
+      Object.entries(filters).forEach(([filterType, filterValue]) => {
+        sortGroup(
+          parseInt(groupIndex),
+          filterType as keyof RepoMetadata,
+          filterValue,
+        );
+      });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(sortFilters)]);
 
   const items = useMemo(
     () =>
@@ -55,7 +103,7 @@ const RepositoryPicker: React.FC<Props> = ({
     setInputValue,
     groupedOptions,
     renderGroupedOptions,
-    setGroupedOptions,
+    setSortFilters: updateFilters,
     getSelectedItemProps,
     getDropdownProps,
     removeSelectedItem,
@@ -65,11 +113,6 @@ const RepositoryPicker: React.FC<Props> = ({
 
   return <OptionPicker {...props} />;
 };
-
-export interface GroupedOption {
-  readonly label: string;
-  readonly options: RepoOption[];
-}
 
 export interface DownshiftSelectProps {
   getSelectedItemProps: (
@@ -91,7 +134,6 @@ interface Props extends DownshiftSelectProps {
     groupedOptions: GroupedOption[],
     getItemProps: (options: UseComboboxGetItemPropsOptions<Option>) => any,
     selectedItems: Option[] | null,
-    setGroupedOptions: (options: GroupedOption[]) => void,
   ) => ReactElement[];
 }
 

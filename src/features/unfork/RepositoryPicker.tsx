@@ -1,34 +1,21 @@
 import RepositoryPicker, {
   DownshiftSelectProps,
-  GroupedOption,
 } from '@/components/RepositoryPicker';
 import { Repository } from '@/types/github';
-import { RepoOption } from '@/types/select';
+import { GroupedOption, RepoOption, SortOrder } from '@/types/select';
 import { UseSelectGetItemPropsOptions } from 'downshift';
 import React from 'react';
-
-type SortOrder = 'descending' | 'ascending';
+import { GroupFilters } from '../../types/select';
 
 export const renderGroupedOptions = (
   groupedOptions: GroupedOption[],
   getItemProps: (options: UseSelectGetItemPropsOptions<RepoOption>) => any,
   selectedItems: RepoOption[] | null,
-  setGroupedOptions: (options: GroupedOption[]) => void,
+  setSortFilters?: (filters: GroupFilters) => void,
 ) => {
   const options = groupedOptions
     .map((groupedOption) => groupedOption.options)
     .flat();
-
-  const sortGroup = (index: number, order: SortOrder) => {
-    const updatedGroupOptions = [...groupedOptions];
-    updatedGroupOptions[index].options.sort((a, b) => {
-      const x = a.metadata?.lastPushDate || `1900-04-10T10:20:30Z`;
-      const y = b.metadata?.lastPushDate || `1900-04-10T10:20:30Z`;
-      return order == `ascending` ? x.localeCompare(y) : y.localeCompare(x);
-    });
-
-    setGroupedOptions(updatedGroupOptions);
-  };
 
   return groupedOptions.map((group, groupIndex) => (
     <div key={`group-${group.label}`}>
@@ -51,14 +38,22 @@ export const renderGroupedOptions = (
         <div className="invisible z-10 rounded-md bg-white text-slate-800 transition peer-hover:visible hover:visible">
           <div
             className="cursor-pointer rounded-t-md px-2 hover:bg-slate-500 hover:text-white"
-            onClick={() => sortGroup(groupIndex, `ascending`)}
+            onClick={() =>
+              setSortFilters?.({
+                [groupIndex]: { lastPushDate: SortOrder.ascending },
+              })
+            }
           >
             <p>Ascending</p>
           </div>
           <div className="h-0.5  bg-slate-700"></div>
           <div
             className="cursor-pointer rounded-b-md px-2 hover:bg-slate-500 hover:text-white"
-            onClick={() => sortGroup(groupIndex, `descending`)}
+            onClick={() =>
+              setSortFilters?.({
+                [groupIndex]: { lastPushDate: SortOrder.descending },
+              })
+            }
           >
             <p>Descending</p>
           </div>

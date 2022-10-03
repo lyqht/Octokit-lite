@@ -1,4 +1,4 @@
-import { Option } from '@/types/select';
+import { GroupedOption, GroupFilters, Option } from '@/types/select';
 import {
   GetPropsCommonOptions,
   useCombobox,
@@ -7,7 +7,6 @@ import {
   UseMultipleSelectionGetSelectedItemPropsOptions,
 } from 'downshift';
 import { ReactElement, useId } from 'react';
-import { GroupedOption } from './RepositoryPicker';
 
 export interface DownshiftSelectProps {
   getSelectedItemProps: (
@@ -25,11 +24,12 @@ export interface DownshiftSelectProps {
 export interface GroupedOptionPickerProps extends DownshiftSelectProps {
   groupedOptions?: GroupedOption[];
   setGroupedOptions?: (options: GroupedOption[]) => void;
+  setSortFilters?: (filters: GroupFilters) => void;
   renderGroupedOptions?: (
     groupedOptions: GroupedOption[],
     getItemProps: (options: UseComboboxGetItemPropsOptions<Option>) => any,
     selectedItems: Option[] | null,
-    setGroupedOptions: (options: GroupedOption[]) => void,
+    setSortFilters: (filters: GroupFilters) => void,
   ) => ReactElement[];
 }
 
@@ -67,8 +67,8 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
   options,
   renderOptions,
   groupedOptions,
-  setGroupedOptions,
   renderGroupedOptions,
+  setSortFilters,
   inputValue,
   setInputValue,
   inputPlaceholderText = `Type a repository name`,
@@ -156,7 +156,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
         groupedOptions,
         getItemProps,
         selectedItems,
-        setGroupedOptions!,
+        setSortFilters!,
       );
     } else {
       return renderOptions?.(items, getItemProps, selectedItems);
