@@ -20,18 +20,20 @@ const RepositoryPicker: React.FC<Props> = ({
   setSelectedItems,
 }) => {
   const [inputValue, setInputValue] = useState<string>(``);
-  const groupedOptions = createGroupedOptions(options).map((groupedOption) => ({
-    ...groupedOption,
-    options: getFilteredItems(groupedOption.options, selectedItems, inputValue),
-  }));
-  const items = useMemo(
-    () =>
-      getFilteredItems(
-        groupedOptions.map((groupedOption) => groupedOption.options).flat(),
+  const [groupedOptions, setGroupedOptions] = useState(
+    createGroupedOptions(options).map((groupedOption) => ({
+      ...groupedOption,
+      options: getFilteredItems(
+        groupedOption.options,
         selectedItems,
         inputValue,
       ),
-    [selectedItems, inputValue, groupedOptions],
+    })),
+  );
+  const items = getFilteredItems(
+    groupedOptions.map((groupedOption) => groupedOption.options).flat(),
+    selectedItems,
+    inputValue,
   );
 
   const props = {
@@ -40,6 +42,7 @@ const RepositoryPicker: React.FC<Props> = ({
     setInputValue,
     groupedOptions,
     renderGroupedOptions,
+    setGroupedOptions,
     getSelectedItemProps,
     getDropdownProps,
     removeSelectedItem,
@@ -75,6 +78,7 @@ interface Props extends DownshiftSelectProps {
     groupedOptions: GroupedOption[],
     getItemProps: (options: UseComboboxGetItemPropsOptions<Option>) => any,
     selectedItems: Option[] | null,
+    setGroupedOptions: (options: GroupedOption[]) => void,
   ) => ReactElement[];
 }
 

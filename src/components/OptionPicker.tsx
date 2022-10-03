@@ -24,10 +24,12 @@ export interface DownshiftSelectProps {
 
 export interface GroupedOptionPickerProps extends DownshiftSelectProps {
   groupedOptions?: GroupedOption[];
+  setGroupedOptions?: (options: GroupedOption[]) => void;
   renderGroupedOptions?: (
     groupedOptions: GroupedOption[],
     getItemProps: (options: UseComboboxGetItemPropsOptions<Option>) => any,
     selectedItems: Option[] | null,
+    setGroupedOptions: (options: GroupedOption[]) => void,
   ) => ReactElement[];
 }
 
@@ -65,6 +67,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
   options,
   renderOptions,
   groupedOptions,
+  setGroupedOptions,
   renderGroupedOptions,
   inputValue,
   setInputValue,
@@ -149,7 +152,12 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
 
   const renderItems = () => {
     if (renderGroupedOptions && groupedOptions) {
-      return renderGroupedOptions(groupedOptions, getItemProps, selectedItems);
+      return renderGroupedOptions(
+        groupedOptions,
+        getItemProps,
+        selectedItems,
+        setGroupedOptions!,
+      );
     } else {
       return renderOptions?.(items, getItemProps, selectedItems);
     }
