@@ -5,7 +5,7 @@ import {
   UseMultipleSelectionGetDropdownProps,
   UseMultipleSelectionGetSelectedItemPropsOptions,
 } from 'downshift';
-import { ReactElement, useMemo, useState } from 'react';
+import { ReactElement, useMemo, useState, useEffect } from 'react';
 import { RepoOption } from '../types/select';
 import OptionPicker, { getFilteredItems } from './OptionPicker';
 
@@ -20,7 +20,7 @@ const RepositoryPicker: React.FC<Props> = ({
   setSelectedItems,
 }) => {
   const [inputValue, setInputValue] = useState<string>(``);
-  const [groupedOptions, setGroupedOptions] = useState(
+  const createFilteredGroupedOptions = () =>
     createGroupedOptions(options).map((groupedOption) => ({
       ...groupedOption,
       options: getFilteredItems(
@@ -28,12 +28,24 @@ const RepositoryPicker: React.FC<Props> = ({
         selectedItems,
         inputValue,
       ),
-    })),
+    }));
+
+  const [groupedOptions, setGroupedOptions] = useState(
+    createFilteredGroupedOptions(),
   );
-  const items = getFilteredItems(
-    groupedOptions.map((groupedOption) => groupedOption.options).flat(),
-    selectedItems,
-    inputValue,
+
+  useEffect(() => {
+    setGroupedOptions(createFilteredGroupedOptions());
+  }, [JSON.stringify(options), inputValue, JSON.stringify(selectedItems)]);
+
+  const items = useMemo(
+    () =>
+      getFilteredItems(
+        groupedOptions.map((groupedOption) => groupedOption.options).flat(),
+        selectedItems,
+        inputValue,
+      ),
+    [selectedItems, inputValue, groupedOptions],
   );
 
   const props = {
