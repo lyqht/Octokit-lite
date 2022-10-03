@@ -104,6 +104,7 @@ const RepositoryPicker: React.FC<Props> = ({
     groupedOptions,
     renderGroupedOptions,
     setSortFilters: updateFilters,
+    sortFilters,
     getSelectedItemProps,
     getDropdownProps,
     removeSelectedItem,

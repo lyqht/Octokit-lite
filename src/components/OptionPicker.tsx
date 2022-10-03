@@ -30,6 +30,7 @@ export interface GroupedOptionPickerProps extends DownshiftSelectProps {
     getItemProps: (options: UseComboboxGetItemPropsOptions<Option>) => any,
     selectedItems: Option[] | null,
     setSortFilters: (filters: GroupFilters) => void,
+    sortFilters: GroupFilters,
   ) => ReactElement[];
 }
 
@@ -47,6 +48,7 @@ export interface OptionPickerProps
   inputValue: string;
   options: Option[];
   setInputValue: (s: string) => void;
+  sortFilters: GroupFilters;
   inputPlaceholderText?: string;
   isCreateable?: boolean;
 }
@@ -69,6 +71,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
   groupedOptions,
   renderGroupedOptions,
   setSortFilters,
+  sortFilters,
   inputValue,
   setInputValue,
   inputPlaceholderText = `Type a repository name`,
@@ -157,6 +160,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
         getItemProps,
         selectedItems,
         setSortFilters!,
+        sortFilters,
       );
     } else {
       return renderOptions?.(items, getItemProps, selectedItems);
