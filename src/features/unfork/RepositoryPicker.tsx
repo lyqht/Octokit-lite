@@ -24,40 +24,42 @@ export const renderGroupedOptions = (
           {group.label}
           <p className="badge-slate-700 badge m-1">{group.options.length}</p>
         </span>
-        <p className="w-1/2">| Last Push</p>
-        <div className="flex flex-col justify-around">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 320 512"
-            className={`-mb-1 w-4 cursor-pointer fill-white hover:fill-slate-500 ${
-              sortFilters &&
-              sortFilters[groupIndex]?.lastPushDate == 1 &&
-              `fill-slate-800`
-            }`}
-            onClick={() =>
-              setSortFilters?.({
-                [groupIndex]: { lastPushDate: SortOrder.ascending },
-              })
-            }
-          >
-            <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z" />
-          </svg>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 320 512"
-            className={`-mt-1 w-4 rotate-180 cursor-pointer fill-white hover:fill-slate-500 ${
-              sortFilters &&
-              sortFilters[groupIndex]?.lastPushDate == 0 &&
-              `fill-slate-800`
-            }`}
-            onClick={() =>
-              setSortFilters?.({
-                [groupIndex]: { lastPushDate: SortOrder.descending },
-              })
-            }
-          >
-            <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z" />
-          </svg>
+        <div className="-ml-2 flex w-1/2 flex-row items-center border-l-2 border-white px-2">
+          <p>Last Push</p>
+          <div className="mx-4 flex flex-col">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+              className={`-mb-1 w-4 cursor-pointer fill-white hover:fill-slate-500 ${
+                sortFilters &&
+                sortFilters[groupIndex]?.lastPushDate == 0 &&
+                `fill-slate-800`
+              }`}
+              onClick={() =>
+                setSortFilters?.({
+                  [groupIndex]: { lastPushDate: SortOrder.ascending },
+                })
+              }
+            >
+              <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z" />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+              className={`-mt-1 w-4 rotate-180 cursor-pointer fill-white hover:fill-slate-500 ${
+                sortFilters &&
+                sortFilters[groupIndex]?.lastPushDate == 1 &&
+                `fill-slate-800`
+              }`}
+              onClick={() =>
+                setSortFilters?.({
+                  [groupIndex]: { lastPushDate: SortOrder.descending },
+                })
+              }
+            >
+              <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z" />
+            </svg>
+          </div>
         </div>
       </div>
       {group.options.map((item, index) => (
