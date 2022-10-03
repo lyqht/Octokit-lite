@@ -7,6 +7,7 @@ export interface RepoMetadata {
   topics?: string[];
   lastPushDate?: string;
   fork: boolean;
+  issues?: number;
 }
 
 export interface RepoOption extends Option {
