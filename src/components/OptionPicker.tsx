@@ -24,6 +24,7 @@ export interface DownshiftSelectProps {
 export interface GroupedOptionPickerProps extends DownshiftSelectProps {
   groupedOptions?: GroupedOption[];
   setGroupedOptions?: (options: GroupedOption[]) => void;
+  sortFilters?: GroupFilters;
   setSortFilters?: (filters: GroupFilters) => void;
   renderGroupedOptions?: (
     groupedOptions: GroupedOption[],
@@ -48,7 +49,6 @@ export interface OptionPickerProps
   inputValue: string;
   options: Option[];
   setInputValue: (s: string) => void;
-  sortFilters: GroupFilters;
   inputPlaceholderText?: string;
   isCreateable?: boolean;
 }
@@ -160,7 +160,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
         getItemProps,
         selectedItems,
         setSortFilters!,
-        sortFilters,
+        sortFilters!,
       );
     } else {
       return renderOptions?.(items, getItemProps, selectedItems);
