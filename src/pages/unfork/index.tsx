@@ -66,6 +66,7 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
       );
       setLoading(false);
       refreshData();
+      setSelectedItems([]);
     }
   };
 
