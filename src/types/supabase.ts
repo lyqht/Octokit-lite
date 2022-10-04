@@ -233,7 +233,7 @@ export interface definitions {
      * Format: timestamp with time zone
      * @default now()
      */
-    created_at?: string;
+    created_at: string;
     /** Format: text */
     repo: string;
     /** Format: text */
@@ -259,7 +259,7 @@ export interface definitions {
      * Format: timestamp without time zone
      * @default now()
      */
-    created_at?: string;
+    created_at: string;
     /** Format: text */
     repo: string;
     /** Format: uuid */

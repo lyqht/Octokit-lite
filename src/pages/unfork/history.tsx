@@ -1,5 +1,6 @@
 import { server } from '@/config';
 import HistoryLogs from '@/layouts/HistoryLogs';
+import { formatDateToLocaleString } from '@/utils/dateUtils';
 import { getUser, withPageAuth } from '@supabase/auth-helpers-nextjs';
 import { HistoryRecord } from '../../types/github';
 
@@ -14,8 +15,7 @@ const History: React.FC<Props> = ({ items }) => {
       renderDescription={(item: HistoryRecord) => {
         return (
           <p className="p-1">
-            Deleted repository at{` `}
-            {new Date(item.created_at as string).toLocaleString()}
+            Deleted repository at {formatDateToLocaleString(item.created_at)}
           </p>
         );
       }}

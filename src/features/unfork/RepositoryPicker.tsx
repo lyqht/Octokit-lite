@@ -6,6 +6,7 @@ import { GroupedOption, RepoOption, SortOrder } from '@/types/select';
 import { UseSelectGetItemPropsOptions } from 'downshift';
 import React from 'react';
 import { GroupFilters } from '../../types/select';
+import { formatDateToLocaleString } from '../../utils/dateUtils';
 
 export const renderGroupedOptions = (
   groupedOptions: GroupedOption[],
@@ -87,7 +88,9 @@ export const renderGroupedOptions = (
           <span className="w-1/2 text-sm text-white">{item.label}</span>
           <div className="w-1/2">
             {item.metadata?.lastPushDate && (
-              <p className="text-sm text-white">{item.metadata.lastPushDate}</p>
+              <p className="text-sm text-white">
+                {formatDateToLocaleString(item.metadata.lastPushDate)}
+              </p>
             )}
           </div>
         </li>

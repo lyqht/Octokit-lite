@@ -1,7 +1,8 @@
 import { server } from '@/config';
 import HistoryLogs from '@/layouts/HistoryLogs';
+import { formatDateToLocaleString } from '@/utils/dateUtils';
 import { getUser, withPageAuth } from '@supabase/auth-helpers-nextjs';
-import { UpdatedRecord, HistoryRecord } from '../../types/github';
+import { HistoryRecord, UpdatedRecord } from '../../types/github';
 
 interface Props {
   items: UpdatedRecord[];
@@ -28,8 +29,7 @@ const History: React.FC<Props> = ({ items }) => {
                 {topic}
               </div>
             ))}
-            {` `}
-            at {new Date(item.created_at as string).toLocaleString()}
+            at {formatDateToLocaleString(item.created_at)}
           </div>
         );
       }}
