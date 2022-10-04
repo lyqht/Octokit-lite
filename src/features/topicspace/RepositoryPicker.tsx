@@ -1,9 +1,8 @@
 import RepositoryPicker, {
   DownshiftSelectProps,
-  GroupedOption,
 } from '@/components/RepositoryPicker';
 import { Repository } from '@/types/github';
-import { RepoOption } from '@/types/select';
+import { GroupedOption, RepoOption } from '@/types/select';
 import { UseSelectGetItemPropsOptions } from 'downshift';
 
 const sortCount = { fork: 0, create: 0 };
