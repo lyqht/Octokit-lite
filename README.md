@@ -36,6 +36,7 @@ At the moment, Octokit lite has the following functionalities:
 Delete repositories easily with Unfork.
 
 <details><summary>Idea behind Unfork</summary>
+
 GitHub forks tend to be created for the following reasons:
 1. Following tutorials 📖
 2. Contributing to open source projects (especially during [Hacktoberfest](https://hacktoberfest.com/)!) 💻
@@ -53,7 +54,7 @@ Unfork helps you to solve that problem **easily** ✨
 - [x] View your repository count.
 - [x] You can choose what repos to delete before actually deleting them.
 - [x] View what the forks that you have deleted.
-- [ ] Allow users to filter repos by inactivity level (e.g. last repo commit date/their last personal commit date to the repo)
+- [x] Allow users to sort repos by inactivity level (e.g. last repo commit date)
 - [ ] Generates an optional shell command for you to run to backup all the forks that you are going to delete before deleting them.
 
 ### Demo
@@ -71,7 +72,7 @@ Apply any topic you like e.g. `Hacktoberfest` to the repositories that you own.
 - [x] You can choose multiple topics and apply it to all of the repos you have selected
 - [x] Show list of existing topics that the repositories have
 - [ ] Show list of autocompleted topics that user can select after user types in some input (just like in GitHub)
-- [ ] Allow users to filters repos by issue count and by inactivity level
+- [x] Allow users to sort repos by issue count
 - [ ] Preview of repo upon hover on repo item: show repo name, description, stars etc like a GitHub repo card
 
 ### Demo
