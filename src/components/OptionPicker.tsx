@@ -169,7 +169,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
   };
 
   const handleMouseLeave = () => {
-    let dropDown: any = dropDownRef.current;
+    const dropDown: HTMLElement = dropDownRef.current!;
     dropDown.scrollTop = 0;
     setHighlightedIndex(0);
   };
