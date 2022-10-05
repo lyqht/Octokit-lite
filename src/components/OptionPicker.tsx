@@ -6,7 +6,7 @@ import {
   UseMultipleSelectionGetDropdownProps,
   UseMultipleSelectionGetSelectedItemPropsOptions,
 } from 'downshift';
-import { ReactElement, useId } from 'react';
+import { ReactElement, useId, useRef } from 'react';
 
 export interface DownshiftSelectProps {
   getSelectedItemProps: (
@@ -152,6 +152,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
       }
     },
   });
+  const dropDownRef = useRef();
 
   const renderItems = () => {
     if (renderGroupedOptions && groupedOptions) {
@@ -165,6 +166,12 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
     } else {
       return renderOptions?.(items, getItemProps, selectedItems);
     }
+  };
+
+  const handleMouseLeave = () => {
+    const dropDown: HTMLElement = dropDownRef.current!;
+    dropDown.scrollTop = 0;
+    setHighlightedIndex(0);
   };
 
   return (
@@ -210,12 +217,13 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
         </div>
       </div>
       <ul
-        {...getMenuProps({ onMouseLeave: () => setHighlightedIndex(0) })}
+        {...getMenuProps({ onMouseLeave: () => handleMouseLeave() })}
         className={`
           ${!isOpen && `hidden`}
           absolute z-20 max-h-60 w-full overflow-scroll rounded-lg bg-white
           shadow-lg scrollbar scrollbar-track-slate-700
            scrollbar-thumb-white scrollbar-track-rounded  scrollbar-thumb-rounded-lg`}
+        ref={dropDownRef}
       >
         {isOpen && renderItems()}
       </ul>
