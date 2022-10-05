@@ -76,6 +76,12 @@ This is my Supabase project auth URL configuration that allows for connecting to
 
 ![](./screenshots/supabase_redirect_urls.png)
 
+To authenticate to Github, please turn on the Github authentication method in Supabase. To fill the values, please create a GitHub app on your own and fill those values in.
+
+Example
+
+<img width="861" alt="Screenshot 2022-10-05 at 8 06 06 PM" src="https://user-images.githubusercontent.com/35736525/194056646-bbd16502-e1c9-4099-a0f1-123f53e917d8.png">
+
 
 ## References
 Some of the contributing guidelines are ripped from [this template](https://gist.github.com/briandk/3d2e8b3ec8daf5a27a62).
