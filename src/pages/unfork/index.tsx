@@ -74,7 +74,7 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
     <div className="flex h-screen flex-col justify-between">
       <div className="p-16">
         <BackButton />
-        <div className="flex h-full flex-col">
+        <div className="flex h-auto flex-col">
           <div className="flex flex-grow flex-col items-center justify-center p-4">
             <Head>
               <title>Unfork</title>
