@@ -68,10 +68,6 @@ create table "UpdatedRecords" (
 
 ```
 
-> Thanks Zernonia! This create table script is generated using [supabase-schema](https://github.com/zernonia/supabase-schema).
-
-More forward link is [Supabase-App](https://app.supabase.com/)
-
 Then you need to add additional auth URLs to your project, depending on the URL you spin up the app on.
 
 - If you are working **locally**, it should be `http://localhost:3000`
@@ -81,8 +77,7 @@ This is my Supabase project auth URL configuration that allows for connecting to
 
 ![](./screenshots/supabase_redirect_urls.png)
 
-To authenticate to Github, please turn on the Github authentication method in Supabase. To fill the values
-Please follow these steps:
+To authenticate to Github, please turn on the Github authentication method in Supabase. You would need to fill the GitHub Client ID and Client Key. These values can be retrieved by following these steps:
 
 - Move to Your github profile > Settings
 - Look for Developer Settings
