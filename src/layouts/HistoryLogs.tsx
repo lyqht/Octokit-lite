@@ -1,5 +1,6 @@
 import BackButton from '@/components/BackButton';
 import Footer from '@/components/Footer';
+import Link from 'next/link';
 import { FC, ReactElement } from 'react';
 import { HistoryRecord } from '../types/github';
 interface Props {
@@ -38,6 +39,9 @@ const HistoryLogs: FC<Props> = ({ items, renderDescription }) => {
             ))}
           </tbody>
         </table>
+        <Link href="https://docs.github.com/en/repositories/creating-and-managing-repositories/restoring-a-deleted-repository">
+          Unforked a wrong repo? Want to restore it
+        </Link>
       </div>
       <Footer />
     </div>
