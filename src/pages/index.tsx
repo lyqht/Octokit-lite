@@ -52,9 +52,13 @@ export default function Home() {
         <div className="flex flex-col items-center gap-8">
           <Link href={`/unfork`}>
             <button
-              className={`btn tooltip tooltip-right tooltip-info flex flex-row items-center justify-center gap-4 shadow ${
+              className={`btn flex flex-row items-center justify-center gap-4 shadow ${
                 user ? `` : `btn-disabled`
-              } ${loading === 0 ? `loading before:order-2 before:ml-2` : ``}`}
+              } ${
+                loading === 0
+                  ? `loading before:order-2 before:ml-2`
+                  : `tooltip tooltip-right tooltip-info`
+              }`}
               data-tip="Delete your forks and repos"
               onClick={() => setLoading(0)}
             >
@@ -71,9 +75,13 @@ export default function Home() {
           </Link>
           <Link href={`/topicspace`}>
             <button
-              className={`btn tooltip tooltip-right tooltip-info flex flex-row items-center justify-center gap-4 shadow ${
+              className={`btn flex flex-row items-center justify-center gap-4 shadow ${
                 user ? `` : `btn-disabled`
-              } ${loading === 1 ? `loading before:order-2 before:ml-2` : ``}`}
+              } ${
+                loading === 1
+                  ? `loading before:order-2 before:ml-2`
+                  : `tooltip tooltip-right tooltip-info`
+              }`}
               data-tip="Add topics to repos"
               onClick={() => setLoading(1)}
             >
