@@ -6,7 +6,7 @@ import LabelPicker, {
   defaultLabelOptions,
 } from '@/features/unlabel/LabelPicker';
 import { useMultipleSelection } from '@/hooks/useMultipleSelection';
-import { GetRepositoriesAndLabelsResponse } from '@/types/github';
+import { GetRepositoriesResponse, Repositories } from '@/types/github';
 import { getUser, User, withPageAuth } from '@supabase/auth-helpers-nextjs';
 import Head from 'next/head';
 import router from 'next/router';
@@ -20,14 +20,10 @@ const Popup = withReactContent(Swal);
 interface Props {
   user: User;
   providerToken: string;
-  labelsAndRepos: GetRepositoriesAndLabelsResponse['labelsAndRepos'];
+  repos: Repositories;
 }
 
-export default function Unlabel({
-  user,
-  providerToken,
-  labelsAndRepos = [],
-}: Props) {
+export default function Unlabel({ user, providerToken, repos = [] }: Props) {
   const [loading, setLoading] = useState(false);
   const [selectedRepos, setSelectedRepos] = useState<RepoOption[]>([]);
   const [labelInput, setLabelInput] = useState<string>(``);
@@ -115,7 +111,7 @@ export default function Unlabel({
                   <p>
                     You have a total of{` `}
                     <span className="rounded-t-lg bg-slate-500 px-2 text-white underline underline-offset-4">
-                      {labelsAndRepos.length}
+                      {repos.length}
                     </span>
                     {` `}
                     repositories.
@@ -140,7 +136,8 @@ export default function Unlabel({
                       Choose the repositories to remove labels from.
                     </p>
                     <RepositoryPicker
-                      data={labelsAndRepos}
+                      providerToken={providerToken}
+                      data={repos}
                       getSelectedItemProps={getSelectedRepoProps}
                       getDropdownProps={getRepoDropdownProps}
                       removeSelectedItem={removeSelectedRepo}
@@ -183,17 +180,16 @@ export const getServerSideProps = withPageAuth({
   async getServerSideProps(ctx) {
     const providerToken = ctx.req.cookies[`sb-provider-token`];
     const { user } = await getUser(ctx);
-    const labelsFromReposResponse = await fetch(
-      `${server}/api/github?provider_token=${providerToken}&labels=true`,
+    const reposPromise = await fetch(
+      `${server}/api/github?provider_token=${providerToken}`,
     );
 
-    const { labelsAndRepos }: GetRepositoriesAndLabelsResponse =
-      await labelsFromReposResponse.json();
+    const { repos }: GetRepositoriesResponse = await reposPromise.json();
 
-    const filteredRepos = labelsAndRepos.filter(
-      ({ repo }) => `${repo.owner.id}` === user.user_metadata.provider_id,
+    const filteredRepos = repos.filter(
+      (repo) => `${repo.owner.id}` === user.user_metadata.provider_id,
     );
 
-    return { props: { user, providerToken, labelsAndRepos: filteredRepos } };
+    return { props: { user, providerToken, repos: filteredRepos } };
   },
 });

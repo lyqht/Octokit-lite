@@ -1,9 +1,15 @@
 import RepositoryPicker, {
   DownshiftSelectProps,
 } from '@/components/RepositoryPicker';
-import { GetRepositoriesAndLabelsResponse } from '@/types/github';
+import { server } from '@/config';
+import {
+  GetRepositoriesAndLabelsResponse,
+  Labels,
+  Repositories,
+} from '@/types/github';
 import { GroupedOption, RepoOption } from '@/types/select';
 import { UseSelectGetItemPropsOptions } from 'downshift';
+import { useEffect, useRef, useState } from 'react';
 
 export const renderGroupedOptions = (
   groupedOptions: GroupedOption[],
@@ -52,7 +58,9 @@ export const renderGroupedOptions = (
                 ))
               ) : (
                 <p className="text-sm text-white">
-                  No labels found for this repo
+                  {!item.metadata?.labels
+                    ? `Loading labels...`
+                    : `No labels found for this repo`}
                 </p>
               )}
             </div>
@@ -65,6 +73,10 @@ export const renderGroupedOptions = (
   );
 };
 
+type RepoLabelOption = {
+  repo: Repositories[number];
+  labels: Labels | null;
+};
 export const createGroupedOptions = (
   options: RepoOption[],
 ): GroupedOption[] => [
@@ -78,30 +90,67 @@ export const createGroupedOptions = (
   },
 ];
 
-export const createOptions = (
-  data: GetRepositoriesAndLabelsResponse['labelsAndRepos'],
-): RepoOption[] =>
+export const createOptions = (data: RepoLabelOption[]): RepoOption[] =>
   data.map(({ repo, labels }) => ({
     value: { owner: repo.owner.login, repo: repo.name },
     label: repo.name,
     metadata: {
-      labels: labels.map((label) => label.name),
+      labels: labels?.map((label) => label.name),
       fork: repo.fork,
       ...(repo.topics && { topics: repo.topics }),
     },
   }));
 
 interface Props extends DownshiftSelectProps {
-  data: GetRepositoriesAndLabelsResponse['labelsAndRepos'];
+  data: Repositories;
+  providerToken: string;
 }
 
-const UnlabelRepositoryPicker: React.FC<Props> = ({ data, ...props }) => (
-  <RepositoryPicker
-    options={createOptions(data)}
-    createGroupedOptions={createGroupedOptions}
-    renderGroupedOptions={renderGroupedOptions}
-    {...props}
-  />
-);
+const UnlabelRepositoryPicker: React.FC<Props> = ({
+  data,
+  providerToken,
+  ...props
+}) => {
+  const fetching = useRef(false);
+  const [optionsData, setOptionsData] = useState<RepoLabelOption[]>(
+    data.map((repo) => ({ repo, labels: null })),
+  );
+  useEffect(() => {
+    if (fetching.current) return;
+    (async () => {
+      fetching.current = true;
+      const labelsFromRepos = await fetch(
+        `${server}/api/github?provider_token=${providerToken}&repos=${JSON.stringify(
+          data.map((repo) => ({ owner: repo.owner.login, name: repo.name })),
+        )}&labels=true`,
+      );
+      const { labelsAndRepos }: GetRepositoriesAndLabelsResponse =
+        await labelsFromRepos.json();
+      setOptionsData((prev) => {
+        const newState = prev.map((item) => {
+          const foundLabelsToRepo = labelsAndRepos.find(
+            (labelRepo) =>
+              labelRepo.repo.name === item.repo.name &&
+              labelRepo.repo.owner === item.repo.owner.login,
+          );
+          if (foundLabelsToRepo)
+            return { labels: foundLabelsToRepo.labels, repo: item.repo };
+          return item;
+        });
+        return newState;
+      });
+      fetching.current = false;
+    })();
+  }, [data, providerToken]);
+
+  return (
+    <RepositoryPicker
+      options={createOptions(optionsData)}
+      createGroupedOptions={createGroupedOptions}
+      renderGroupedOptions={renderGroupedOptions}
+      {...props}
+    />
+  );
+};
 
 export default UnlabelRepositoryPicker;

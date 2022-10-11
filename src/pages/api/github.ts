@@ -47,7 +47,7 @@ const getRepos = async (octokit: Octokit): Promise<Repositories> => {
 };
 const getLabels = async (
   octokit: Octokit,
-  repo: { owner: string; repo: string },
+  repo: { owner: string; name: string },
 ): Promise<Labels> => {
   const fetchedLabels: Labels = [];
   let currentPage = 1;
@@ -55,7 +55,8 @@ const getLabels = async (
 
   while (continueFetching) {
     const currentPageFetched = await octokit.rest.issues.listLabelsForRepo({
-      ...repo,
+      owner: repo.owner,
+      repo: repo.name,
       per_page: 100,
       page: currentPage,
     });
@@ -121,7 +122,10 @@ const updateReposWithTopics = async (
     console.debug(JSON.stringify(replacedTopics, null, 4));
   } catch (err) {
     console.error(JSON.stringify(err));
-    throw new Error(JSON.stringify(err));
+    const error = `Error updating topics of ${
+      repos.length
+    } repos, due to ${JSON.stringify(err)}`;
+    throw new Error(error);
   }
 
   return repoTopicDict;
@@ -135,13 +139,13 @@ const updateReposWithLabels = async (
   const repoDict: RemoveRepositoryLabelResponse = {};
   try {
     for (const { owner, repo } of repos) {
-      const repoLabels = await getLabels(octokit, { repo, owner });
+      const repoLabels = await getLabels(octokit, { name: repo, owner });
       const labelNames = repoLabels.map((l) => l.name);
       const newLabels = labelNames.filter(
         (name) => !labels.find((label) => label === name),
       );
       if (newLabels.length === labelNames.length)
-        throw new Error(`Labels does not exist in this repo`);
+        throw new Error(`Labels do not exist in this repo`);
       repoDict[repo] = {
         prevLabels: labelNames,
         labels: newLabels,
@@ -182,7 +186,7 @@ const updateReposWithLabels = async (
     console.debug(JSON.stringify(replacedLabels, null, 4));
   } catch (err) {
     console.error(JSON.stringify(err));
-    throw new Error(JSON.stringify(err));
+    throw new Error((err as Error).message);
   }
 
   return repoDict;
@@ -209,18 +213,23 @@ export default async function handler(
   });
 
   if (req.method === `GET`) {
-    const repos = await getRepos(octokit);
-
     if (req.query[`labels`]) {
-      const promises = repos.map((repo) =>
-        getLabels(octokit, { repo: repo.name, owner: repo.owner.login }),
+      console.time(`Labels`);
+      const repos: { owner: string; name: string }[] = JSON.parse(
+        req.query[`repos`] as string,
       );
+      const promises = repos.map((repo) => getLabels(octokit, repo));
       const labelsAndRepos = (await Promise.all(promises)).map(
         (labels, index) => ({ labels, repo: repos[index] }),
       );
+      console.timeEnd(`Labels`);
 
       return res.status(200).json({ labelsAndRepos });
     }
+
+    console.time(`repos`);
+    const repos = await getRepos(octokit);
+    console.timeEnd(`repos`);
 
     return res.status(200).json({
       repos,
@@ -252,9 +261,7 @@ export default async function handler(
       return res.status(200).json(result);
     } catch (err) {
       return res.status(400).json({
-        message: `Error updating topics of ${
-          repos.length
-        } repos, due to ${JSON.stringify(err)}`,
+        message: (err as Error).message,
       });
     }
   } else if (req.method === `DELETE`) {

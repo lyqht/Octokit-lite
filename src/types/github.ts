@@ -18,7 +18,7 @@ export interface GetRepositoriesResponse {
   repos: Repositories;
 }
 export interface GetRepositoriesAndLabelsResponse {
-  labelsAndRepos: { repo: Repositories[number]; labels: Labels }[];
+  labelsAndRepos: { repo: { owner: string; name: string }; labels: Labels }[];
 }
 export interface DeleteRepositoriesResponse {
   data: DeletedRecord[];
