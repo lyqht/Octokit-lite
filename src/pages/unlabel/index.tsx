@@ -90,6 +90,7 @@ export default function Unlabel({
       setLoading(false);
       refreshData();
       setSelectedRepos([]);
+      setLabels([]);
     }
   };
 
