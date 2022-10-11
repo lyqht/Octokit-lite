@@ -101,7 +101,12 @@ export default function Home() {
             <button
               className={`btn flex flex-row items-center justify-center gap-4 shadow ${
                 user ? `` : `btn-disabled`
-              } ${loading === 2 ? `loading before:order-2 before:ml-2` : ``}`}
+              } ${
+                loading === 2
+                  ? `loading before:order-2 before:ml-2`
+                  : `tooltip tooltip-right tooltip-info`
+              }`}
+              data-tip="Remove labels from all issues in your repos"
               onClick={() => setLoading(2)}
             >
               <div className="w-12">
