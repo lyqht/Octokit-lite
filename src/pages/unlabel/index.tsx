@@ -60,7 +60,7 @@ export default function Unlabel({
       .join(``);
     const userInput = await Popup.fire({
       title: `Are you sure?`,
-      html: `You are about to delete the following labels from these repositories:<br />${reposToBeUpdatedTextInBulletPoints}`,
+      html: `You are about to delete labels from these repositories:<br />${reposToBeUpdatedTextInBulletPoints}`,
       icon: `warning`,
       showCancelButton: true,
       confirmButtonColor: `#F04444`,
