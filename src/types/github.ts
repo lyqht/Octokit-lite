@@ -11,10 +11,15 @@ export type Repository =
 export type Repositories =
   RestEndpointMethodTypes['repos']['listForAuthenticatedUser']['response']['data'];
 
+export type Labels =
+  RestEndpointMethodTypes['issues']['listLabelsForRepo']['response']['data'];
+
 export interface GetRepositoriesResponse {
   repos: Repositories;
 }
-
+export interface GetRepositoriesAndLabelsResponse {
+  labelsAndRepos: { repo: Repositories[number]; labels: Labels }[];
+}
 export interface DeleteRepositoriesResponse {
   data: DeletedRecord[];
 }
@@ -22,6 +27,11 @@ export interface DeleteRepositoriesResponse {
 export type UpdateRepositoryResponse = Record<
   string,
   { prevTopics: string[]; topics: string[]; owner: string }
+>;
+
+export type RemoveRepositoryLabelResponse = Record<
+  string,
+  { prevLabels: string[]; labels: string[]; owner: string }
 >;
 
 export interface ErrorResponse {

@@ -266,11 +266,13 @@ export interface definitions {
     userId?: string;
     /** Format: json */
     initialRepoDetails: {
-      prevTopics: string[];
+      prevTopics?: string[];
+      prevLabels?: string[];
     };
     /** Format: json */
     updatedFields: {
-      topics: string[];
+      topics?: string[];
+      labels?: string[];
     };
   };
 }

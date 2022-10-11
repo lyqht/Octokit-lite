@@ -14,19 +14,18 @@ const History: React.FC<Props> = ({ items }) => {
       items={items}
       renderDescription={(item: HistoryRecord) => {
         const updatedRecord = item as UpdatedRecord;
-        const addedTopics = updatedRecord.updatedFields.topics?.filter(
-          (topic) =>
-            !updatedRecord.initialRepoDetails.prevTopics?.includes(topic),
+        const addedLabels = updatedRecord.initialRepoDetails.prevLabels?.filter(
+          (label) => !updatedRecord.updatedFields.labels?.includes(label),
         );
         return (
           <div className="prose">
-            Added {addedTopics?.length} topic(s):
-            {addedTopics?.map((topic, index) => (
+            Removed {addedLabels?.length} label(s):
+            {addedLabels?.map((label, index) => (
               <div
-                key={`${item.id}-${topic}-${index}`}
+                key={`${item.id}-${label}-${index}`}
                 className="badge-slate-500 badge m-1"
               >
-                {topic}
+                {label}
               </div>
             ))}
             at {formatDateToLocaleString(item.created_at)}
@@ -48,7 +47,7 @@ export const getServerSideProps = withPageAuth({
     );
     const items: UpdatedRecord[] = await dbResponse.json();
     const filteredItems = items.filter(
-      (item) => !!item.initialRepoDetails.prevTopics,
+      (item) => !!item.initialRepoDetails.prevLabels,
     );
     return { props: { user, items: filteredItems } };
   },

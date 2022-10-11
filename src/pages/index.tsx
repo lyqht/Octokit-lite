@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import unforkLogo from '../../public/unfork_logo.png';
+import unlabelLogo from '../../public/unlabel_logo.png';
 import topicspaceLogo from '../../public/topicspace_logo.svg';
 import octokitLogo from '../../public/logo.png';
 
@@ -84,6 +85,24 @@ export default function Home() {
                 />
               </div>
               <p>TopicSpace</p>
+            </button>
+          </Link>
+          <Link href={`/unlabel`}>
+            <button
+              className={`btn flex flex-row items-center justify-center gap-4 shadow ${
+                user ? `` : `btn-disabled`
+              } ${loading === 2 ? `loading before:order-2 before:ml-2` : ``}`}
+              onClick={() => setLoading(2)}
+            >
+              <div className="w-12">
+                <Image
+                  layout="responsive"
+                  src={unlabelLogo}
+                  alt={`Unlabel`}
+                  className={`${user ? `` : `opacity-60`}`}
+                />
+              </div>
+              <p>Unlabel</p>
             </button>
           </Link>
         </div>
