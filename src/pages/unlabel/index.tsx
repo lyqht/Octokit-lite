@@ -183,7 +183,7 @@ export const getServerSideProps = withPageAuth({
     const providerToken = ctx.req.cookies[`sb-provider-token`];
     const { user } = await getUser(ctx);
     const labelsFromReposResponse = await fetch(
-      `${server}/api/github?provider_token=${providerToken}&labels='true`,
+      `${server}/api/github?provider_token=${providerToken}&labels=true`,
     );
 
     const { labelsAndRepos }: GetRepositoriesAndLabelsResponse =
