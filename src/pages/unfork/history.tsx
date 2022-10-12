@@ -15,7 +15,7 @@ const History: React.FC<Props> = ({ items }) => {
       renderDescription={(item: HistoryRecord) => {
         return (
           <p className="p-1">
-            Deleted repository at {formatDateToLocaleString(item.created_at)}
+            Deleted repository at {formatDateToLocaleString(item.created_at!)}
           </p>
         );
       }}
