@@ -5,6 +5,7 @@ export type RepoOptionValue = {
 
 export interface RepoMetadata {
   topics?: string[];
+  labels?: string[];
   lastPushDate?: string;
   fork: boolean;
 }

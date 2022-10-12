@@ -10,8 +10,9 @@
 <a href="https://discord.gg/7y6RXemP"><img src="https://badgen.net/badge/icon/Discord?icon=discord&label" /></a>
 
 At the moment, Octokit lite has the following functionalities:
-- [Unfork](#unfork) <img width='24' src='public/unfork_logo.png' /> — identify all the forks that you have made over the _months_ or _years_ and **unfork** them all!
-- [TopicSpace](#topicspace) <img width='24' src='public/topicspace_logo.svg' /> — a handy tool for project maintainers to add topic(s) to all the repositories that you want!
+- [Unfork](#unfork) <img width='24' src='public/app_icons/unfork_logo.svg' /> — identify all the forks that you have made over the _months_ or _years_ and **unfork** them all!
+- [TopicSpace](#topicspace) <img width='24' src='public/app_icons/topicspace_logo.svg' /> — a handy tool for project maintainers to add topic(s) to all the repositories that you want!
+- [Unlabel](#unlabel) <img width='24' src='public/app_icons/unlabel_logo.svg' /> — a handy tool for project maintainers to add topic(s) to all the repositories that you want!
 
 ---
 
@@ -77,6 +78,12 @@ Apply any topic you like e.g. `Hacktoberfest` to the repositories that you own.
 ### Demo
 
 ![](screenshots/Octokitlite-TopicSpace-Demo.gif)
+
+## Unlabel
+
+Remove label(s) from all issues in the repos you selected. 
+
+For example, when Hacktoberfest is over, you can choose to remove the `hacktoberfest` label from all issues of your projects that participated in Hacktoberfest.
 
 ## Tech Stack
 
