@@ -79,7 +79,7 @@ export default function Unlabel({ user, providerToken, repos = [] }: Props) {
       if (res.status === 200)
         Popup.fire(
           `Updated!`,
-          `${numRepos} repositories has been updated.`,
+          `<p>${numRepos} repositories has been updated.</p><p class="text-sm text-left mt-4">*The number above excludes repos without the label to be deleted.</p>`,
           `success`,
         );
       else Popup.fire(`Failure!`, `Something went wrong..`, `error`);
