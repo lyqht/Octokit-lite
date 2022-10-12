@@ -144,20 +144,21 @@ const updateReposWithLabels = async (
       const newLabels = labelNames.filter(
         (name) => !labels.find((label) => label === name),
       );
-      if (newLabels.length === labelNames.length)
-        throw new Error(`Labels do not exist in this repo`);
-      repoDict[repo] = {
-        prevLabels: labelNames,
-        labels: newLabels,
-        owner,
-      };
+      if (newLabels.length !== labelNames.length)
+        repoDict[repo] = {
+          prevLabels: labelNames,
+          labels: newLabels,
+          owner,
+        };
     }
-
     const updatePromises = Object.entries(repoDict).map(
       ([repo, { owner, labels: newLabels, prevLabels }]) =>
         new Promise(async (resolve) => {
+          const filteredLabels = labels.filter((label) =>
+            prevLabels.includes(label),
+          );
           const finishGitHubUpdate = await Promise.all(
-            labels.map((name) =>
+            filteredLabels.map((name) =>
               octokit.rest.issues.deleteLabel({
                 repo,
                 owner,
@@ -165,7 +166,6 @@ const updateReposWithLabels = async (
               }),
             ),
           );
-
           const addedUpdatedRecordToDB = await supabase
             .from<UpdatedRecord>(`UpdatedRecords`)
             .insert({
@@ -214,7 +214,6 @@ export default async function handler(
 
   if (req.method === `GET`) {
     if (req.query[`labels`]) {
-      console.time(`Labels`);
       const repos: { owner: string; name: string }[] = JSON.parse(
         req.query[`repos`] as string,
       );
@@ -222,14 +221,11 @@ export default async function handler(
       const labelsAndRepos = (await Promise.all(promises)).map(
         (labels, index) => ({ labels, repo: repos[index] }),
       );
-      console.timeEnd(`Labels`);
 
       return res.status(200).json({ labelsAndRepos });
     }
 
-    console.time(`repos`);
     const repos = await getRepos(octokit);
-    console.timeEnd(`repos`);
 
     return res.status(200).json({
       repos,
