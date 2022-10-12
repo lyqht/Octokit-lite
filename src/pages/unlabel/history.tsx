@@ -28,7 +28,7 @@ const History: React.FC<Props> = ({ items }) => {
                 {label}
               </div>
             ))}
-            at {formatDateToLocaleString(item.created_at)}
+            at {formatDateToLocaleString(item.created_at!)}
           </div>
         );
       }}
@@ -47,7 +47,7 @@ export const getServerSideProps = withPageAuth({
     );
     const items: UpdatedRecord[] = await dbResponse.json();
     const filteredItems = items.filter(
-      (item) => !!item.initialRepoDetails.prevLabels,
+      (item) => !!item.initialRepoDetails?.prevLabels,
     );
     return { props: { user, items: filteredItems } };
   },

@@ -3,8 +3,21 @@ import { Database } from './supabase';
 
 export type DeletedRecord =
   Database['public']['Tables']['DeletedRecords']['Row'];
+
+export type InitialRepoDetails = {
+  prevTopics?: string[];
+  prevLabels?: string[];
+};
+export type UpdatedFields = {
+  topics?: string[];
+  labels?: string[];
+};
+
 export type UpdatedRecord =
-  Database['public']['Tables']['UpdatedRecords']['Row'];
+  Database['public']['Tables']['UpdatedRecords']['Row'] & {
+    initialRepoDetails: InitialRepoDetails;
+    updatedFields: UpdatedFields;
+  };
 export type HistoryRecord = DeletedRecord | UpdatedRecord;
 
 export type Repository =
