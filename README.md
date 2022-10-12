@@ -1,14 +1,13 @@
-<h1>Octokit-lite</h1>
 <div align='center'>
-  <div>
     <img width='160' src='public/logo.png' />
-    <p><i>An app to help you perform handy operations for your GitHub repositories (especially during <a href="https://hacktoberfest.com/">Hacktoberfest</a>!)</i></p>
-  </div>
+    <h1>Octokit-lite</h1>
+    <p>Performs GitHub operations on multiple repositories <i>efficiently</i></p>
+    <br />
   <a href="https://gitpod.io/github.com/lyqht/Octokit-lite/">
   </a>
 </div>
 
-<br />
+<a href="https://discord.gg/7y6RXemP"><img src="https://badgen.net/badge/icon/Discord?icon=discord&label" /></a>
 
 At the moment, Octokit lite has the following functionalities:
 - [Unfork](#unfork) <img width='24' src='public/unfork_logo.png' /> — identify all the forks that you have made over the _months_ or _years_ and **unfork** them all!
