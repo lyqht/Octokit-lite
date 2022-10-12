@@ -110,7 +110,7 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
                 </div>
                 <div className="flex flex-col gap-4">
                   <button
-                    className={`btn btn-outline ${
+                    className={`btn btn-outline my-16 ${
                       loading ? `loading before:order-2 before:ml-2` : ``
                     }`}
                     disabled={selectedItems.length === 0}
