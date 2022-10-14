@@ -25,3 +25,7 @@ a {
   justify-items: flex-start;
   align-items: center;
 }
+
+.tooltip {
+  text-align: left;
+}

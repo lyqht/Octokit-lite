@@ -1,35 +1,33 @@
 import BackButton from '@/components/BackButton';
 import Footer from '@/components/Footer';
 import { server } from '@/config';
-import RepositoryPicker from '@/features/topicspace/RepositoryPicker';
+import RepositoryPicker from '@/features/unlabel/RepositoryPicker';
+import LabelPicker, {
+  defaultLabelOptions,
+} from '@/features/unlabel/LabelPicker';
 import { useMultipleSelection } from '@/hooks/useMultipleSelection';
-import { GetRepositoriesResponse, Repository } from '@/types/github';
-import { Option, RepoOption } from '@/types/select';
+import { GetRepositoriesResponse, Repositories } from '@/types/github';
 import { getUser, User, withPageAuth } from '@supabase/auth-helpers-nextjs';
 import Head from 'next/head';
+import router from 'next/router';
 import Router from 'next/router';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { UpdateRepositoryResponse } from '../../types/github';
-import TopicPicker, {
-  defaultTopicOptions,
-} from '../../features/topicspace/TopicPicker';
-import router from 'next/router';
+import { Option, RepoOption } from '@/types/select';
 
 const Popup = withReactContent(Swal);
 interface Props {
   user: User;
   providerToken: string;
-  repos: Repository[];
+  repos: Repositories;
 }
 
-export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
+export default function Unlabel({ user, providerToken, repos = [] }: Props) {
   const [loading, setLoading] = useState(false);
-  const [topicInput, setTopicInput] = useState<string>(``);
-  const [topics, setTopics] = useState<Option[]>([]);
   const [selectedRepos, setSelectedRepos] = useState<RepoOption[]>([]);
-
+  const [labelInput, setLabelInput] = useState<string>(``);
+  const [labels, setLabels] = useState<Option[]>([]);
   const {
     getSelectedItemProps: getSelectedRepoProps,
     getDropdownProps: getRepoDropdownProps,
@@ -40,30 +38,30 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
   });
 
   const {
-    getSelectedItemProps: getSelectedTopicsProps,
-    getDropdownProps: getTopicDropdownProps,
-    removeSelectedItem: removeSelectedTopic,
+    getSelectedItemProps: getSelectedLabelsProps,
+    getDropdownProps: getLabelDropdownProps,
+    removeSelectedItem: removeSelectedLabel,
   } = useMultipleSelection({
-    selectedItems: topics,
-    setSelectedItems: setTopics,
+    selectedItems: labels,
+    setSelectedItems: setLabels,
   });
 
   const refreshData = () => {
     router.replace(router.asPath);
   };
 
-  const onActionButtonClick = async () => {
-    const reposToBeUpdated = selectedRepos
+  const onDeleteButtonPress = async () => {
+    const reposToBeUpdatedTextInBulletPoints = selectedRepos
       .map((repo) => `- ${repo.label}<br />`)
       .join(``);
     const userInput = await Popup.fire({
       title: `Are you sure?`,
-      html: `You are about to add topics to the following repositories:<br />${reposToBeUpdated}`,
+      html: `You are about to delete labels from these repositories:<br />${reposToBeUpdatedTextInBulletPoints}`,
       icon: `warning`,
       showCancelButton: true,
       confirmButtonColor: `#F04444`,
       cancelButtonColor: `#D9D9D9`,
-      confirmButtonText: `Yes, confirm.`,
+      confirmButtonText: `Yes, confirm update.`,
     });
 
     if (userInput.isConfirmed && providerToken) {
@@ -71,39 +69,38 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
       const res = await fetch(
         `api/github?provider_token=${providerToken}&repos=${JSON.stringify(
           selectedRepos.map((repo) => repo.value),
-        )}&topics=${JSON.stringify(
-          topics.map((topic) => topic.value),
-        )}&userId=${user?.id}`,
+        )}&labels=${labels.map(({ value }) => value)}&userId=${user?.id}`,
         {
           method: `PATCH`,
         },
       );
-      const data: UpdateRepositoryResponse = await res.json();
-      const numRepos = Object.keys(data).length;
-      Popup.fire(
-        `Added topics!`,
-        `${numRepos} repositories has been modified.`,
-        `success`,
-      );
+      const resBody = await res.json();
+      const numRepos = Object.keys(resBody).length;
+      if (res.status === 200)
+        Popup.fire(
+          `Updated!`,
+          `<p>${numRepos} repositories has been updated.</p><p class="text-sm text-left mt-4">*The number above excludes repos without the label to be deleted.</p>`,
+          `success`,
+        );
+      else Popup.fire(`Failure!`, `Something went wrong..`, `error`);
+      setLoading(false);
+      refreshData();
+      setSelectedRepos([]);
+      setLabels([]);
     }
-
-    setLoading(false);
-    refreshData();
   };
 
   return (
     <div className="flex h-screen flex-col justify-between">
-      <div>
-        <div className="m-4">
-          <BackButton />
-        </div>
+      <div className="p-16">
+        <BackButton />
         <div className="flex h-auto flex-col">
           <div className="flex flex-grow flex-col items-center justify-center p-4">
             <Head>
-              <title>TopicSpace</title>
+              <title>Unlabel</title>
               <meta
                 name="description"
-                content="App to help add topics to your repos"
+                content="App to help remove all unnecessary labels from your repos"
               />
               <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -119,26 +116,27 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
                     {` `}
                     repositories.
                   </p>
-                  <div id="topic-selection-container" className="py-4">
+                  <div id="Label-selection-container" className="py-4">
                     <p className="label py-4">
-                      Enter the topic(s) to be added.
+                      Enter the label(s) to be removed.
                     </p>
-                    <TopicPicker
-                      options={defaultTopicOptions}
-                      getSelectedItemProps={getSelectedTopicsProps}
-                      getDropdownProps={getTopicDropdownProps}
-                      removeSelectedItem={removeSelectedTopic}
-                      selectedItems={topics}
-                      setSelectedItems={setTopics}
-                      inputValue={topicInput}
-                      setInputValue={setTopicInput}
+                    <LabelPicker
+                      options={defaultLabelOptions}
+                      getSelectedItemProps={getSelectedLabelsProps}
+                      getDropdownProps={getLabelDropdownProps}
+                      removeSelectedItem={removeSelectedLabel}
+                      selectedItems={labels}
+                      setSelectedItems={setLabels}
+                      inputValue={labelInput}
+                      setInputValue={setLabelInput}
                     />
                   </div>
                   <div id="repository-selection-container" className="py-4">
                     <p className="label py-4">
-                      Choose the repositories to add topics to.
+                      Choose the repositories to remove labels from.
                     </p>
                     <RepositoryPicker
+                      providerToken={providerToken}
                       data={repos}
                       getSelectedItemProps={getSelectedRepoProps}
                       getDropdownProps={getRepoDropdownProps}
@@ -153,15 +151,15 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
                     className={`btn btn-outline my-16 ${
                       loading ? `loading before:order-2 before:ml-2` : ``
                     }`}
-                    disabled={selectedRepos.length === 0 && topics.length === 0}
-                    onClick={onActionButtonClick}
+                    disabled={selectedRepos.length === 0}
+                    onClick={onDeleteButtonPress}
                   >
                     Next →
                   </button>
                   <button
                     className="btn btn-ghost text-xs"
                     onClick={() => {
-                      Router.push(`/topicspace/history`);
+                      Router.push(`/unlabel/history`);
                     }}
                   >
                     View what you have updated using Octokit-lite
@@ -182,16 +180,16 @@ export const getServerSideProps = withPageAuth({
   async getServerSideProps(ctx) {
     const providerToken = ctx.req.cookies[`sb-provider-token`];
     const { user } = await getUser(ctx);
-    const githubResponse = await fetch(
+    const reposPromise = await fetch(
       `${server}/api/github?provider_token=${providerToken}`,
     );
-    const { repos }: GetRepositoriesResponse = await githubResponse.json();
+
+    const { repos }: GetRepositoriesResponse = await reposPromise.json();
+
     const filteredRepos = repos.filter(
       (repo) => `${repo.owner.id}` === user.user_metadata.provider_id,
     );
 
-    return {
-      props: { user, providerToken, repos: filteredRepos },
-    };
+    return { props: { user, providerToken, repos: filteredRepos } };
   },
 });
