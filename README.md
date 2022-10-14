@@ -10,19 +10,22 @@
 <a href="https://discord.gg/7y6RXemP"><img src="https://badgen.net/badge/icon/Discord?icon=discord&label" /></a>
 
 At the moment, Octokit lite has the following functionalities:
-- [Unfork](#unfork) <img width='24' src='public/app_icons/unfork_logo.svg' /> — identify all the forks that you have made over the _months_ or _years_ and **unfork** them all!
-- [TopicSpace](#topicspace) <img width='24' src='public/app_icons/topicspace_logo.svg' /> — a handy tool for project maintainers to add topic(s) to all the repositories that you want!
-- [Unlabel](#unlabel) <img width='24' src='public/app_icons/unlabel_logo.svg' /> — a handy tool for project maintainers to add topic(s) to all the repositories that you want!
-
+- [Unfork](#unfork) <img width='24' src='public/app_icons/unfork_logo.svg' /> — Delete repos.
+- [TopicSpace](#topicspace) <img width='24' src='public/app_icons/topicspace_logo.svg' /> — Add topic(s) to repos.
+- [Unlabel](#unlabel) <img width='24' src='public/app_icons/unlabel_logo.svg' /> — Remove issue label(s) from repos.
 ---
 
 **Table of contents**
+
 - [Unfork](#unfork)
   - [Features](#features)
   - [Demo](#demo)
 - [TopicSpace](#topicspace)
   - [Features](#features-1)
   - [Demo](#demo-1)
+- [Unlabel](#unlabel)
+  - [Features](#features-2)
+  - [Demo](#demo-2)
 - [Tech Stack](#tech-stack)
 - [License](#license)
 - [Contributing](#contributing)
@@ -69,11 +72,10 @@ Apply any topic you like e.g. `Hacktoberfest` to the repositories that you own.
 
 ### Features
  
-- [x] You can choose multiple topics and apply it to all of the repos you have selected
+- [x] Choose multiple topics and apply it to all of the repos you have selected
 - [x] Show list of existing topics that the repositories have
-- [ ] Show list of autocompleted topics that user can select after user types in some input (just like in GitHub)
 - [x] Allow users to sort repos by issue count
-- [ ] Preview of repo upon hover on repo item: show repo name, description, stars etc like a GitHub repo card
+- [ ] Show list of autocompleted topics that user can select after user types in some input (just like in GitHub)
 
 ### Demo
 
@@ -84,6 +86,16 @@ Apply any topic you like e.g. `Hacktoberfest` to the repositories that you own.
 Remove label(s) from all issues in the repos you selected. 
 
 For example, when Hacktoberfest is over, you can choose to remove the `hacktoberfest` label from all issues of your projects that participated in Hacktoberfest.
+
+### Features
+
+- [x] Choose multiple issue labels to be removed from repos
+- [x] Show list of existing issue labels that the repositories have
+- [ ] Show number of issues that is tagged to an issue label in the dropdown
+
+### Demo
+
+![](screenshots/Octokitlite-Unlabel-demo.gif)
 
 ## Tech Stack
 
