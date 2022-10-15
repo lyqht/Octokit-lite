@@ -75,7 +75,10 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
   return (
     <div className="relative flex h-screen flex-col justify-between">
       <div className="p-16">
-        <BackButton />
+        <div className="flex flex-row justify-between">
+          <BackButton />
+          <FaqButton content={FaqContent} />
+        </div>
         <div className="flex h-auto flex-col">
           <div className="flex flex-grow flex-col items-center justify-center p-4">
             <Head>
@@ -86,8 +89,6 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
               />
               <link rel="icon" href="/favicon.ico" />
             </Head>
-
-            <FaqButton content={FaqContent} />
 
             <div className="flex w-full flex-auto flex-grow flex-col px-4 lg:w-1/3">
               <div className={`flex h-full flex-col justify-between py-4`}>
