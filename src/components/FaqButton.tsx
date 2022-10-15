@@ -23,11 +23,17 @@ export const FaqContent: React.FC<FaqContentProps> = ({
       onClick={(e) => handleOnClose(e)}
       data-theme
     >
-      <div className="max-w-sm rounded bg-black bg-opacity-30 p-2 px-5 pb-5 backdrop-blur-sm md:max-w-lg">
+      <div className="relative max-w-sm rounded bg-black bg-opacity-30 p-2 px-5 pb-5 backdrop-blur-sm md:max-w-lg">
         <h1 className="my-5 rounded py-3 text-center text-xl font-bold underline underline-offset-8">
           FAQ
         </h1>
         {content !== null && <>{content}</>}
+        <button
+          className="btn btn-square absolute top-4 right-4"
+          onClick={onClose}
+        >
+          X
+        </button>
       </div>
     </div>
   );
