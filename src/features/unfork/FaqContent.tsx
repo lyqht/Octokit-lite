@@ -36,9 +36,16 @@ const FaqContent = (
         <p className="font-bold">How do I restore my deleted projects?</p>
         <ul className="list-circle list-outside pl-5">
           <li>
-            Please refer to the GitHub documentation on restoring your deleted
-            projects. You may only restore projects that are deleted in the last
-            90 days.
+            Please refer to the{` `}
+            <a
+              href="https://docs.github.com/en/repositories/creating-and-managing-repositories/restoring-a-deleted-repository"
+              className="text-orange"
+            >
+              GitHub documentation
+            </a>
+            {` `}
+            on restoring your deleted projects. You may only restore projects
+            that are deleted in the last 90 days.
           </li>
         </ul>
       </li>
