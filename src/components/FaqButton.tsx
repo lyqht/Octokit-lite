@@ -1,16 +1,20 @@
-import React, { ReactElement, useState } from 'react';
-type Props = {
+import React, { useState } from 'react';
+
+type FaqContentProps = {
   visible: boolean;
   onClose: VoidFunction;
-  data: React.ReactNode;
+  content: React.ReactNode;
 };
 
-export const Faq: React.FC<Props> = ({ visible, onClose, data }) => {
+export const FaqContent: React.FC<FaqContentProps> = ({
+  visible,
+  onClose,
+  content,
+}) => {
   const handleOnClose = (e: any) => {
     if (e.target.id !== `container`) return;
     onClose();
   };
-
   if (!visible) return null;
   return (
     <div
@@ -20,19 +24,20 @@ export const Faq: React.FC<Props> = ({ visible, onClose, data }) => {
       data-theme
     >
       <div className="max-w-sm rounded bg-black bg-opacity-30 p-2 px-5 pb-5 backdrop-blur-sm md:max-w-lg">
-        <h1 className="btn-primary my-5 rounded py-3 text-center font-bold">
+        <h1 className="my-5 rounded py-3 text-center text-xl font-bold underline underline-offset-8">
           FAQ
         </h1>
-        {data !== null && <>{data}</>}
+        {content !== null && <>{content}</>}
       </div>
     </div>
   );
 };
 
-type props = {
-  data: React.ReactNode;
+type FaqButtonProps = {
+  content: React.ReactNode;
 };
-const FaqButton: React.FC<props> = ({ data }) => {
+
+const FaqButton: React.FC<FaqButtonProps> = ({ content }) => {
   const [showModal, setShowModal] = useState(false);
   const handleOnClose = () => setShowModal(false);
   return (
@@ -43,7 +48,11 @@ const FaqButton: React.FC<props> = ({ data }) => {
       >
         ?
       </button>
-      <Faq visible={showModal} onClose={handleOnClose} data={data} />
+      <FaqContent
+        visible={showModal}
+        onClose={handleOnClose}
+        content={content}
+      />
     </div>
   );
 };

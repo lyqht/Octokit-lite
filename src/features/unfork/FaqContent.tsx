@@ -1,4 +1,4 @@
-const unforkFAQ = (
+const FaqContent = (
   <blockquote className="pl-5">
     <ul className="list-outside list-disc">
       <li>
@@ -64,6 +64,4 @@ const unforkFAQ = (
   </blockquote>
 );
 
-// Add topic space faq in HTML form to pass as a data
-const topicSpaceFAQ = <div>Topic Space FAQ</div>;
-export { unforkFAQ };
+export default FaqContent;

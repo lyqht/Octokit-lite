@@ -1,8 +1,8 @@
 import BackButton from '@/components/BackButton';
 import FaqButton from '@/components/FaqButton';
 import Footer from '@/components/Footer';
-import { unforkFAQ } from '@/components/Const';
 import { server } from '@/config';
+import FaqContent from '@/features/unfork/FaqContent';
 import RepositoryPicker from '@/features/unfork/RepositoryPicker';
 import { useMultipleSelection } from '@/hooks/useMultipleSelection';
 import { GetRepositoriesResponse, Repository } from '@/types/github';
@@ -87,7 +87,7 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
               <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <FaqButton data={unforkFAQ} />
+            <FaqButton content={FaqContent} />
 
             <div className="flex w-full flex-auto flex-grow flex-col px-4 lg:w-1/3">
               <div className={`flex h-full flex-col justify-between py-4`}>
