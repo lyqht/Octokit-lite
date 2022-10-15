@@ -18,7 +18,7 @@ export const FaqContent: React.FC<FaqContentProps> = ({
   if (!visible) return null;
   return (
     <div
-      className="w-100 fixed inset-0 z-30 flex items-start bg-transparent p-4 md:items-center md:justify-center"
+      className="w-100 fixed inset-0 z-30 flex items-start bg-zinc-900/60 p-4 md:items-center md:justify-center"
       id="container"
       onClick={(e) => handleOnClose(e)}
       data-theme
