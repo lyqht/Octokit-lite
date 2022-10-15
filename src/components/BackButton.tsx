@@ -3,7 +3,7 @@ import { ReactElement } from 'react';
 
 const BackButton = (): ReactElement => (
   <button
-    className="hide-mobile btn glass text-sm sm:text-base"
+    className="btn glass text-sm sm:text-base"
     onClick={() => Router.back()}
   >
     {`<`} Back
