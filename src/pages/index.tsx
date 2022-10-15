@@ -1,7 +1,5 @@
 import { BasicUserInfo, signInGitHub } from '@/components/Auth';
 import Footer from '@/components/Footer';
-import FaqButton, { Faq } from '@/components/FaqButton';
-
 import { useUser } from '@supabase/auth-helpers-react';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -26,10 +24,6 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <div className="absolute right-2 top-2">
-        <FaqButton />
-      </div>
 
       <div className="h-100 flex flex-grow flex-col items-center justify-center p-4">
         <div
