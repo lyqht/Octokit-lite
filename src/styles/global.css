@@ -29,3 +29,6 @@ a {
 .tooltip {
   text-align: left;
 }
+.list-circle{
+  list-style-type: circle;
+}

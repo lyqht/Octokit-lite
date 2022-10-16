@@ -15,7 +15,7 @@ export default function Home() {
   const [loading, setLoading] = useState<null | number>(null);
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="relative flex h-screen flex-col">
       <Head>
         <title>Octokit-lite</title>
         <meta
@@ -24,6 +24,7 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <div className="h-100 flex flex-grow flex-col items-center justify-center p-4">
         <div
           className={`flex shrink flex-col content-center items-center gap-4 p-4 text-center`}

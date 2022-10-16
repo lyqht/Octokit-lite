@@ -1,6 +1,8 @@
 import BackButton from '@/components/BackButton';
+import FaqButton from '@/components/FaqButton';
 import Footer from '@/components/Footer';
 import { server } from '@/config';
+import FaqContent from '@/features/unfork/FaqContent';
 import RepositoryPicker from '@/features/unfork/RepositoryPicker';
 import { useMultipleSelection } from '@/hooks/useMultipleSelection';
 import { GetRepositoriesResponse, Repository } from '@/types/github';
@@ -71,9 +73,12 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
   };
 
   return (
-    <div className="flex h-screen flex-col justify-between">
+    <div className="relative flex h-screen flex-col justify-between">
       <div className="p-16">
-        <BackButton />
+        <div className="flex flex-row justify-between">
+          <BackButton />
+          <FaqButton content={FaqContent} />
+        </div>
         <div className="flex h-auto flex-col">
           <div className="flex flex-grow flex-col items-center justify-center p-4">
             <Head>
