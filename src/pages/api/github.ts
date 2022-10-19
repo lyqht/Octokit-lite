@@ -141,7 +141,6 @@ const updateReposWithLabels = async (
 ): Promise<RemoveRepositoryLabelResponse> => {
   const repoDict: RemoveRepositoryLabelResponse = {};
   try {
-    // @ts-ignore
     const { script: unlabel } = await import(
       `https://cdn.skypack.dev/octoherd-script-unlabel`
     );
