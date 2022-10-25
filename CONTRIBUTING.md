@@ -1,14 +1,16 @@
 Table of contents
 
 - [Contributing to Octokit-lite](#contributing-to-octokit-lite)
+  - [Introduction](#introduction)
   - [Any contributions you make will be under the MIT Software License](#any-contributions-you-make-will-be-under-the-mit-software-license)
-  - [Report bugs using Github's issues](#report-bugs-using-githubs-issues)
-  - [Write bug reports with detail, background, and sample code](#write-bug-reports-with-detail-background-and-sample-code)
-  - [Setting up the project](#setting-up-the-project)
-    - [Supabase](#supabase)
-  - [References](#references)
+  - [Reporting bugs](#reporting-bugs)
+  - [Setting up the project for development](#setting-up-the-project-for-development)
+    - [Set up Supabase](#set-up-supabase)
+
 
 # Contributing to Octokit-lite
+
+## Introduction
 
 We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
 
@@ -17,17 +19,25 @@ We love your input! We want to make contributing to this project as easy and tra
 - Submitting a fix
 - Proposing new features/designs
 
-Be sure to join our discord! <a href="https://discord.gg/7y6RXemP"><img src="https://badgen.net/badge/icon/Discord?icon=discord&label" /></a>
+As a new contributor, please make sure to perform the following tasks.
+
+1. Join our discord! 
+   
+   [![](https://badgen.net/badge/icon/Discord?icon=discord&label)](https://discord.gg/7y6RXemP)
+2. Refer to the CodeSee map to understand the code on a high level overview. 
+   
+   [![View CodeSee Map](https://codesee-docs.s3.amazonaws.com/badge.svg)](https://app.codesee.io/maps/public/ca272eb0-4d3e-11ed-a645-2b949c63e59c)
+3. For development, you can develop the project either locally on your machine or use GitPod. For the full setup instructions, refer to [this section](#setting-up-the-project-for-development).
+  
+    [![Contribute with GitPod](https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod)](https://gitpod.io/github.com/lyqht/Octokit-lite/)
 
 ## Any contributions you make will be under the MIT Software License
 
 In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. By contributing, you agree that your contributions will be licensed under its MIT License.
 
-## Report bugs using Github's [issues](https://github.com/briandk/transcriptase-atom/issues)
+## Reporting bugs 
 
 We use GitHub issues to track public bugs. Report a bug by opening a new issue; it's that easy!
-
-## Write bug reports with detail, background, and sample code
 
 **Great Bug Reports** tend to have:
 
@@ -39,9 +49,9 @@ We use GitHub issues to track public bugs. Report a bug by opening a new issue; 
 - What actually happens
 - Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
 
-## Setting up the project
+## Setting up the project for development
 
-### Supabase
+### Set up Supabase
 
 Please refer to `.env.template` for the env variables you may need. I am not going to give you the prod Supabase project access, so please create your own Supabase project and populate those values.
 

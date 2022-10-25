@@ -1,13 +1,10 @@
 <div align='center'>
     <img width='160' src='public/logo.png' />
-    <h1>Octokit-lite</h1>
+    <h1>Octokit-lite <a href="https://discord.gg/7y6RXemP"><img src="https://badgen.net/badge/icon/Discord?icon=discord&label" /></a></h1>
     <p>Performs GitHub operations on multiple repositories <i>efficiently</i></p>
     <br />
-  <a href="https://gitpod.io/github.com/lyqht/Octokit-lite/">
   </a>
 </div>
-
-<a href="https://discord.gg/7y6RXemP"><img src="https://badgen.net/badge/icon/Discord?icon=discord&label" /></a>
 
 At the moment, Octokit lite has the following functionalities:
 - [Unfork](#unfork) <img width='24' src='public/app_icons/unfork_logo.svg' /> — Delete repos.
@@ -114,12 +111,11 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Contributing
 
-<img
-  src="https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod"
-  alt="Contribute with Gitpod"
-/>
+[![Contribute with GitPod](https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod)](https://gitpod.io/github.com/lyqht/Octokit-lite/)
 
-Refer to [CONTRIBUTING.md](CONTRIBUTING.md).
+[![View CodeSee Map](https://codesee-docs.s3.amazonaws.com/badge.svg)](https://app.codesee.io/maps/public/ca272eb0-4d3e-11ed-a645-2b949c63e59c)
+
+For more information, refer to [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Other handy tools
 
