@@ -118,7 +118,8 @@ export default function Unlabel({ user, providerToken, repos = [] }: Props) {
                   </p>
                   <div id="Label-selection-container" className="py-4">
                     <p className="label py-4">
-                      Enter the label(s) to be removed.
+                      Enter the label(s) to be removed. Note that these label(s)
+                      will be removed from both open & closed issues & PRs.
                     </p>
                     <LabelPicker
                       options={defaultLabelOptions}
