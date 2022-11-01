@@ -6,7 +6,7 @@ import {
   UseMultipleSelectionGetDropdownProps,
   UseMultipleSelectionGetSelectedItemPropsOptions,
 } from 'downshift';
-import { ReactElement, useId, useRef } from 'react';
+import { LegacyRef, ReactElement, useId, useRef } from 'react';
 
 export interface DownshiftSelectProps {
   getSelectedItemProps: (
@@ -87,6 +87,14 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
         getFilteredItems(options, selectedItems, inputValue),
       )
     : getFilteredItems(options, selectedItems, inputValue);
+
+  const onCloseMenu = () => {
+    // setHighlightedIndex(0);
+    console.log(`IS THIS HAPPENING`);
+    const dropDown: HTMLElement = dropDownRef.current!;
+    dropDown.scrollTop = 600;
+  };
+
   const {
     isOpen,
     getToggleButtonProps,
@@ -168,12 +176,6 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
     }
   };
 
-  const handleMouseLeave = () => {
-    const dropDown: HTMLElement = dropDownRef.current!;
-    dropDown.scrollTop = 0;
-    setHighlightedIndex(0);
-  };
-
   return (
     <div className="relative w-full" id={useId()}>
       <div
@@ -217,13 +219,14 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
         </div>
       </div>
       <ul
-        {...getMenuProps({ onMouseLeave: () => handleMouseLeave() })}
+        {...getMenuProps({
+          ref: dropDownRef as unknown as LegacyRef<HTMLElement>,
+        })}
         className={`
           ${!isOpen && `hidden`}
           absolute z-20 max-h-60 w-full overflow-scroll rounded-lg bg-white
           shadow-lg scrollbar scrollbar-track-slate-700
            scrollbar-thumb-white scrollbar-track-rounded  scrollbar-thumb-rounded-lg`}
-        ref={dropDownRef}
       >
         {isOpen && renderItems()}
       </ul>
