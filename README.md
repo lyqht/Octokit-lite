@@ -63,10 +63,9 @@ Unfork helps you to solve that problem **easily** ✨
 
 ## TopicSpace
 
-Apply any topic you like e.g. `Hacktoberfest` to the repositories that you own.
+Apply or delete any topic you like e.g. `Hacktoberfest` to the repositories that you own.
 
-<img src='screenshots/topicspace_preview.png' />
-
+![TopicSpace Preview](screenshots/topicspace_preview.png)
 ### Features
  
 - [x] Choose multiple topics and apply it to all of the repos you have selected
@@ -76,7 +75,7 @@ Apply any topic you like e.g. `Hacktoberfest` to the repositories that you own.
 
 ### Demo
 
-![](screenshots/Octokitlite-TopicSpace-Demo.gif)
+![preview of deleting topics using Octokit-lite](screenshots/Octokitlite-TopicSpace-DeleteTopics-Demo.gif)
 
 ## Unlabel
 
