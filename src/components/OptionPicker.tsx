@@ -104,6 +104,7 @@ const OptionPicker: React.FC<OptionPickerProps> = ({
     setHighlightedIndex,
     getItemProps,
   } = useCombobox({
+    id: useId(),
     items,
     itemToString(item) {
       return item ? item.label : ``;
