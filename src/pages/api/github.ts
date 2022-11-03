@@ -90,7 +90,7 @@ const updateReposWithTopics = async (
       repoTopicDict[repo] = {
         prevTopics: [...data.names],
         topics:
-          action == `Add`
+          action == `add`
             ? [...new Set(data.names.concat(topics))]
             : data.names.filter((name) => !topics.includes(name)),
         owner,

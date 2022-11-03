@@ -30,7 +30,7 @@ interface Props {
 
 export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
   const [loading, setLoading] = useState(false);
-  const [selectedAction, setSelectedAction] = useState<Action>(`Add`);
+  const [selectedAction, setSelectedAction] = useState<Action>(`add`);
   const [topicInput, setTopicInput] = useState<string>(``);
   const [topics, setTopics] = useState<Option[]>([]);
   const [selectedRepos, setSelectedRepos] = useState<RepoOption[]>([]);
@@ -64,7 +64,7 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
     const userInput = await Popup.fire({
       title: `Are you sure?`,
       html: `You are about to ${
-        selectedAction === `Add` ? `add topics to` : `delete topics of`
+        selectedAction === `add` ? `add topics to` : `delete topics of`
       } the following repos:<br />${reposToBeUpdated}`,
       icon: `warning`,
       showCancelButton: true,
@@ -88,7 +88,7 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
       const data: UpdateRepositoryResponse = await res.json();
       const numRepos = Object.keys(data).length;
       Popup.fire(
-        `${selectedAction === `Add` ? `Added` : `Deleted`} topics!`,
+        `${selectedAction === `add` ? `Added` : `Deleted`} topics!`,
         `${numRepos} repositories has been modified.`,
         `success`,
       );
@@ -130,7 +130,7 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
                       Select to add or to delete topics from your repos.
                     </p>
                     <RadioGroup
-                      states={[`Add`, `Delete`]}
+                      states={[`add`, `Delete`]}
                       selectedState={selectedAction}
                       onChange={
                         setSelectedAction as Dispatch<SetStateAction<string>>
@@ -140,7 +140,7 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
                   <div id="topic-selection-container" className="py-4">
                     <p className="label py-4">
                       Enter the topic(s) to be{` `}
-                      {selectedAction === `Add` ? `added` : `deleted`}.
+                      {selectedAction === `add` ? `added` : `deleted`}.
                     </p>
                     <TopicPicker
                       options={defaultTopicOptions}
@@ -156,7 +156,7 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
                   <div id="repository-selection-container" className="py-4">
                     <p className="label py-4">
                       Choose the repositories to{` `}
-                      {selectedAction === `Add` ? `add` : `delete`} topics.
+                      {selectedAction === `add` ? `add` : `delete`} topics.
                     </p>
                     <RepositoryPicker
                       data={repos}
