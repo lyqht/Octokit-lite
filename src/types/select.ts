@@ -34,3 +34,4 @@ export enum SortOrder {
 }
 export type Filters = Partial<Record<keyof RepoMetadata, SortOrder | null>>;
 export type GroupFilters = Record<number, Filters>;
+export type Action = 'add' | 'delete';

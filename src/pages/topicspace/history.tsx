@@ -3,6 +3,7 @@ import HistoryLogs from '@/layouts/HistoryLogs';
 import { formatDateToLocaleString } from '@/utils/dateUtils';
 import { getUser, withPageAuth } from '@supabase/auth-helpers-nextjs';
 import { HistoryRecord, UpdatedRecord } from '../../types/github';
+import { Action } from '../../types/select';
 
 interface Props {
   items: UpdatedRecord[];
@@ -14,14 +15,16 @@ const History: React.FC<Props> = ({ items }) => {
       items={items}
       renderDescription={(item: HistoryRecord) => {
         const updatedRecord = item as UpdatedRecord;
-        const addedTopics = updatedRecord.updatedFields.topics?.filter(
-          (topic) =>
-            !updatedRecord.initialRepoDetails.prevTopics?.includes(topic),
-        );
+        const updatedTopics = updatedRecord.updatedFields.topics;
+
         return (
           <div className="prose">
-            Added {addedTopics?.length} topic(s):
-            {addedTopics?.map((topic, index) => (
+            <span>
+              {updatedRecord.action == `add` ? `Added` : `Deleted`}
+              {` `}
+              {updatedTopics?.length} topic(s):
+            </span>
+            {updatedTopics?.map((topic, index) => (
               <div
                 key={`${item.id}-${topic}-${index}`}
                 className="badge-slate-500 badge m-1"

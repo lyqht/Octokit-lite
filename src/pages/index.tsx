@@ -5,10 +5,10 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import unforkLogo from '../../public/app_icons/unfork_logo.svg';
-import unlabelLogo from '../../public/app_icons/unlabel_logo.svg';
-import topicspaceLogo from '../../public/app_icons/topicspace_logo.svg';
-import octokitLogo from '../../public/logo.png';
+import unforkLogo from '@/../public/app_icons/unfork_logo.svg';
+import unlabelLogo from '@/../public/app_icons/unlabel_logo.svg';
+import topicspaceLogo from '@/../public/app_icons/topicspace_logo.svg';
+import octokitLogo from '@/../public/logo.png';
 
 export default function Home() {
   const { user } = useUser();
