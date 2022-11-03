@@ -17,6 +17,7 @@ export interface Database {
           userId: string | null;
           initialRepoDetails: Json;
           updatedFields: Json;
+          action: string;
         };
         Insert: {
           id?: number;
@@ -25,6 +26,7 @@ export interface Database {
           userId?: string | null;
           initialRepoDetails: Json;
           updatedFields: Json;
+          action?: string;
         };
         Update: {
           id?: number;
@@ -33,6 +35,7 @@ export interface Database {
           userId?: string | null;
           initialRepoDetails?: Json;
           updatedFields?: Json;
+          action?: string;
         };
       };
       DeletedRecords: {

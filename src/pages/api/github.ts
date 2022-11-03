@@ -17,7 +17,7 @@ import {
   UpdatedRecord,
   UpdateRepositoryResponse,
 } from '../../types/github';
-import { RepoOptionValue } from '../../types/select';
+import { RepoOptionValue, Action } from '../../types/select';
 import { supabase } from './supabase';
 
 const getRepos = async (octokit: Octokit): Promise<Repositories> => {
@@ -78,6 +78,7 @@ const updateReposWithTopics = async (
   userId: string,
   topics: string[],
   repos: RepoOptionValue[],
+  action: Action,
 ): Promise<UpdateRepositoryResponse> => {
   const repoTopicDict: UpdateRepositoryResponse = {};
   try {
@@ -88,7 +89,10 @@ const updateReposWithTopics = async (
       });
       repoTopicDict[repo] = {
         prevTopics: [...data.names],
-        topics: [...new Set(topics.concat(data.names))], // new topics may overlap with prev topics, so we ensure it to be unique
+        topics:
+          action == `Add`
+            ? [...new Set(data.names.concat(topics))]
+            : data.names.filter((name) => !topics.includes(name)),
         owner,
       };
     }
@@ -231,7 +235,7 @@ export default async function handler(
       repos,
     });
   } else if (req.method === `PATCH`) {
-    const { repos, topics, userId, labels } = req.query;
+    const { repos, topics, userId, labels, action } = req.query;
 
     if (!repos || !userId || (!topics && !labels)) {
       return res.status(400).json({ message: `query parameters missing` });
@@ -247,11 +251,16 @@ export default async function handler(
           JSON.parse(repos as string),
         );
       } else {
+        if (!action) {
+          return res.status(400).json({ message: `action is missing` });
+        }
+
         result = await updateReposWithTopics(
           octokit,
           userId as string,
           JSON.parse(topics as string),
           JSON.parse(repos as string),
+          action as Action,
         );
       }
       return res.status(200).json(result);

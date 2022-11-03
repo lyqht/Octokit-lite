@@ -1,5 +1,6 @@
 import { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
 import { Database } from './supabase';
+import { Action } from './select';
 
 export type DeletedRecord =
   Database['public']['Tables']['DeletedRecords']['Row'];
@@ -17,6 +18,7 @@ export type UpdatedRecord =
   Database['public']['Tables']['UpdatedRecords']['Row'] & {
     initialRepoDetails: InitialRepoDetails;
     updatedFields: UpdatedFields;
+    action: Action;
   };
 export type HistoryRecord = DeletedRecord | UpdatedRecord;
 

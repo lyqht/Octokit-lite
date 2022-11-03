@@ -8,7 +8,7 @@ import { Option, RepoOption } from '@/types/select';
 import { getUser, User, withPageAuth } from '@supabase/auth-helpers-nextjs';
 import Head from 'next/head';
 import Router from 'next/router';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { UpdateRepositoryResponse } from '../../types/github';
@@ -16,6 +16,10 @@ import TopicPicker, {
   defaultTopicOptions,
 } from '../../features/topicspace/TopicPicker';
 import router from 'next/router';
+import RadioGroup from '@/components/RadioGroup';
+import { Action } from '../../types/select';
+import Image from 'next/image';
+import topicspaceLogo from '@/../public/app_icons/topicspace_logo.svg';
 
 const Popup = withReactContent(Swal);
 interface Props {
@@ -26,6 +30,7 @@ interface Props {
 
 export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
   const [loading, setLoading] = useState(false);
+  const [selectedAction, setSelectedAction] = useState<Action>(`Add`);
   const [topicInput, setTopicInput] = useState<string>(``);
   const [topics, setTopics] = useState<Option[]>([]);
   const [selectedRepos, setSelectedRepos] = useState<RepoOption[]>([]);
@@ -58,7 +63,9 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
       .join(``);
     const userInput = await Popup.fire({
       title: `Are you sure?`,
-      html: `You are about to add topics to the following repositories:<br />${reposToBeUpdated}`,
+      html: `You are about to ${
+        selectedAction === `Add` ? `add topics to` : `delete topics of`
+      } the following repos:<br />${reposToBeUpdated}`,
       icon: `warning`,
       showCancelButton: true,
       confirmButtonColor: `#F04444`,
@@ -73,7 +80,7 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
           selectedRepos.map((repo) => repo.value),
         )}&topics=${JSON.stringify(
           topics.map((topic) => topic.value),
-        )}&userId=${user?.id}`,
+        )}&userId=${user?.id}&action=${selectedAction}`,
         {
           method: `PATCH`,
         },
@@ -81,7 +88,7 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
       const data: UpdateRepositoryResponse = await res.json();
       const numRepos = Object.keys(data).length;
       Popup.fire(
-        `Added topics!`,
+        `${selectedAction === `Add` ? `Added` : `Deleted`} topics!`,
         `${numRepos} repositories has been modified.`,
         `success`,
       );
@@ -103,7 +110,7 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
               <title>TopicSpace</title>
               <meta
                 name="description"
-                content="App to help add topics to your repos"
+                content="App to help add/delete topics of your repos"
               />
               <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -111,17 +118,29 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
             <div className="flex w-full flex-auto flex-grow flex-col px-4 lg:w-1/3">
               <div className={`flex h-full flex-col justify-between py-4`}>
                 <div className="flex h-1/2 flex-col justify-center">
-                  <p>
-                    You have a total of{` `}
-                    <span className="rounded-t-lg bg-slate-500 px-2 text-white underline underline-offset-4">
-                      {repos.length}
-                    </span>
-                    {` `}
-                    repositories.
-                  </p>
+                  <div className="w-24">
+                    <Image
+                      layout="responsive"
+                      src={topicspaceLogo}
+                      alt="TopicSpace"
+                    />
+                  </div>
                   <div id="topic-selection-container" className="py-4">
                     <p className="label py-4">
-                      Enter the topic(s) to be added.
+                      Select to add or to delete topics from your repos.
+                    </p>
+                    <RadioGroup
+                      states={[`Add`, `Delete`]}
+                      selectedState={selectedAction}
+                      onChange={
+                        setSelectedAction as Dispatch<SetStateAction<string>>
+                      }
+                    />
+                  </div>
+                  <div id="topic-selection-container" className="py-4">
+                    <p className="label py-4">
+                      Enter the topic(s) to be{` `}
+                      {selectedAction === `Add` ? `added` : `deleted`}.
                     </p>
                     <TopicPicker
                       options={defaultTopicOptions}
@@ -136,7 +155,8 @@ export default function TopicSpace({ user, providerToken, repos = [] }: Props) {
                   </div>
                   <div id="repository-selection-container" className="py-4">
                     <p className="label py-4">
-                      Choose the repositories to add topics to.
+                      Choose the repositories to{` `}
+                      {selectedAction === `Add` ? `add` : `delete`} topics.
                     </p>
                     <RepositoryPicker
                       data={repos}
