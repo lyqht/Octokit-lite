@@ -59,6 +59,14 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
           method: `DELETE`,
         },
       );
+
+      // Handle error if response is outside the range 200 - 299
+      if(!res.ok) {
+        const message = `An error has occured: ${res.status}`
+        Popup.fire(message)
+        throw new Error(message)
+      }
+
       const resBody = await res.json();
       const numReposDeleted = resBody.data.length;
       Popup.fire(
