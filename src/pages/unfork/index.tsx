@@ -17,6 +17,7 @@ import { RepoOption } from '../../types/select';
 import { splitArrayInChunks } from '@/utils/splitArrayInChunks'
 
 const Popup = withReactContent(Swal);
+const NUMBER_OF_REPOS_PER_CHUNK = 5
 interface Props {
   user: User;
   providerToken: string;
@@ -54,7 +55,7 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
       setLoading(true);
 
       // Split the total of repos into smaller chunks to process
-      const reposInChunks = splitArrayInChunks(selectedItems, 5);
+      const reposInChunks = splitArrayInChunks(selectedItems, NUMBER_OF_REPOS_PER_CHUNK);
 
       let counter = 0;
       let totalNumReposDeleted = 0;
