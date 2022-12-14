@@ -14,6 +14,7 @@ import { useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { RepoOption } from '../../types/select';
+import { splitArrayInChunks } from '@/utils/splitArrayInChunks'
 
 const Popup = withReactContent(Swal);
 interface Props {
@@ -51,27 +52,37 @@ export default function Unfork({ user, providerToken, repos = [] }: Props) {
 
     if (userInput.isConfirmed && providerToken) {
       setLoading(true);
-      const res = await fetch(
-        `api/github?provider_token=${providerToken}&repos=${JSON.stringify(
-          selectedItems.map((repo) => repo.value),
-        )}&userId=${user?.id}`,
-        {
-          method: `DELETE`,
-        },
-      );
 
-      // Handle error if response is outside the range 200 - 299
-      if(!res.ok) {
-        const message = `An error has occured: ${res.status}`
-        Popup.fire(message)
-        throw new Error(message)
+      // Split the total of repos into smaller chunks to process
+      const reposInChunks = splitArrayInChunks(selectedItems, 5);
+
+      let counter = 0;
+      let totalNumReposDeleted = 0;
+      while (counter < reposInChunks.length) {
+        const res = await fetch(
+          `api/github?provider_token=${providerToken}&repos=${JSON.stringify(
+            reposInChunks[counter].map((repo: { value: string }) => repo.value),
+          )}&userId=${user?.id}`,
+          {
+            method: `DELETE`,
+          },
+        );
+
+        // Handle error if response is outside the range 200 - 299
+        if (!res.ok) {
+          const message = `An error has occured: ${res.status}`;
+          Popup.fire(message);
+          throw new Error(message);
+        }
+
+        const resBody = await res.json();
+        totalNumReposDeleted += resBody.data.length;
+        counter++;
       }
 
-      const resBody = await res.json();
-      const numReposDeleted = resBody.data.length;
       Popup.fire(
         `Deleted!`,
-        `${numReposDeleted} repositories has been deleted.`,
+        `${totalNumReposDeleted} repositories has been deleted.`,
         `success`,
       );
       setLoading(false);
