@@ -1,6 +1,6 @@
 <div align='center'>
     <img width='160' src='public/logo.png' />
-    <h1>Octokit-lite <a href="https://discord.gg/7y6RXemP"><img src="https://badgen.net/badge/icon/Discord?icon=discord&label" /></a></h1>
+    <h1>Octokit-lite</h1>
     <p>Performs GitHub operations on multiple repositories <i>efficiently</i></p>
     <br />
   </a>
