@@ -45,6 +45,7 @@ const getRepos = async (octokit: Octokit): Promise<Repositories> => {
 
   return fetchedRepos;
 };
+
 const getLabels = async (
   octokit: Octokit,
   repo: { owner: string; name: string },
@@ -73,6 +74,7 @@ const getLabels = async (
 
   return fetchedLabels;
 };
+
 const updateReposWithTopics = async (
   octokit: Octokit,
   userId: string,
@@ -134,6 +136,7 @@ const updateReposWithTopics = async (
 
   return repoTopicDict;
 };
+
 const updateReposWithLabels = async (
   octokit: Octokit,
   userId: string,
@@ -142,47 +145,53 @@ const updateReposWithLabels = async (
 ): Promise<RemoveRepositoryLabelResponse> => {
   const repoDict: RemoveRepositoryLabelResponse = {};
   try {
+    const { script: unlabel } = await import(
+      `https://cdn.skypack.dev/octoherd-script-unlabel`
+    );
     for (const { owner, repo } of repos) {
       const repoLabels = await getLabels(octokit, { name: repo, owner });
       const labelNames = repoLabels.map((l) => l.name);
       const newLabels = labelNames.filter(
         (name) => !labels.find((label) => label === name),
       );
-      if (newLabels.length !== labelNames.length)
+      if (newLabels.length !== labelNames.length) {
         repoDict[repo] = {
           prevLabels: labelNames,
           labels: newLabels,
           owner,
         };
+      }
     }
+
     const updatePromises = Object.entries(repoDict).map(
       ([repo, { owner, labels: newLabels, prevLabels }]) =>
-        new Promise(async (resolve) => {
+        new Promise(async (resolve, reject) => {
           const filteredLabels = labels.filter((label) =>
             prevLabels.includes(label),
           );
-          const finishGitHubUpdate = await Promise.all(
-            filteredLabels.map((name) =>
-              octokit.rest.issues.deleteLabel({
+          try {
+            await unlabel(
+              octokit,
+              { owner: { login: owner }, name: repo },
+              {
+                labels: filteredLabels.join(`,`),
+              },
+            );
+            const addedUpdatedRecordToDB = await supabase
+              .from<UpdatedRecord>(`UpdatedRecords`)
+              .insert({
                 repo,
-                owner,
-                name,
-              }),
-            ),
-          );
-          const addedUpdatedRecordToDB = await supabase
-            .from<UpdatedRecord>(`UpdatedRecords`)
-            .insert({
-              repo,
-              userId,
-              initialRepoDetails: { prevLabels },
-              updatedFields: { labels: newLabels },
+                userId,
+                initialRepoDetails: { prevLabels },
+                updatedFields: { labels: newLabels },
+              });
+            resolve({
+              addedUpdatedRecordToDB,
             });
-
-          resolve({
-            finishGitHubUpdate,
-            addedUpdatedRecordToDB,
-          });
+          } catch (error) {
+            console.debug(JSON.stringify(error));
+            reject(JSON.stringify((error as Error).message));
+          }
         }),
     );
 
@@ -195,6 +204,7 @@ const updateReposWithLabels = async (
 
   return repoDict;
 };
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<
