@@ -21,13 +21,10 @@ We love your input! We want to make contributing to this project as easy and tra
 
 As a new contributor, please make sure to perform the following tasks.
 
-1. Join our discord! 
-   
-   [![](https://badgen.net/badge/icon/Discord?icon=discord&label)](https://discord.gg/7y6RXemP)
-2. Refer to the CodeSee map to understand the code on a high level overview. 
+1. Refer to the CodeSee map to understand the code on a high level overview. 
    
    [![View CodeSee Map](https://codesee-docs.s3.amazonaws.com/badge.svg)](https://app.codesee.io/maps/public/ca272eb0-4d3e-11ed-a645-2b949c63e59c)
-3. For development, you can develop the project either locally on your machine or use GitPod. For the full setup instructions, refer to [this section](#setting-up-the-project-for-development).
+2. For development, you can develop the project either locally on your machine or use GitPod. For the full setup instructions, refer to [this section](#setting-up-the-project-for-development).
   
     [![Contribute with GitPod](https://img.shields.io/badge/Contribute%20with-Gitpod-908a85?logo=gitpod)](https://gitpod.io/github.com/lyqht/Octokit-lite/)
 
