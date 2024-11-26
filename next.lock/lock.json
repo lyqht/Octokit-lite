@@ -1,0 +1,4 @@
+{
+  "https://cdn.skypack.dev/octoherd-script-unlabel": { "resolved": "https://cdn.skypack.dev/-/octoherd-script-unlabel@v1.0.1-Oq0rKtwXR1k3e3bKKr35/dist=es2019,mode=imports/optimized/octoherd-script-unlabel.js", "integrity": "sha512-b2aXa3+QgbXKudQBUNf71rfGd9LdZe3ngZMkTdj3NuvmsU5Bk9cN7PGNk4rdTpt7p6YW2+O/jh7YcuV8TAOsag==", "contentType": "application/javascript; charset=utf-8" },
+  "version": 1
+}
